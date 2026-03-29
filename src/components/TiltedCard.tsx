@@ -1,29 +1,21 @@
 import type { SpringOptions } from 'motion/react';
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
-
-
-interface ResponsiveSize {
-  sm?: string;
-  md?: string;
-  lg?: string;
-  xl?: string;
-  '2xl'?: string;
-}
 
 interface TiltedCardProps {
   imageSrc: React.ComponentProps<'img'>['src'];
   altText?: string;
   caption?: React.ReactNode;
-  containerHeight?: string | ResponsiveSize;
-  containerWidth?: string | ResponsiveSize;
-  imageHeight?: string | ResponsiveSize;
-  imageWidth?: string | ResponsiveSize;
+  containerHeight?: string;
+  containerWidth?: string;
+  imageHeight?: string;
+  imageWidth?: string;
   scaleOnHover?: number;
   rotateAmplitude?: number;
   showMobileWarning?: boolean;
   showTooltip?: boolean;
   overlayContent?: React.ReactNode;
+  themeContent: React.ReactNode;
   displayOverlayContent?: boolean;
 }
 
@@ -33,69 +25,45 @@ const springValues: SpringOptions = {
   mass: 2
 };
 
-function useResponsiveValue(value: string | ResponsiveSize) {
-  const [current, setCurrent] = useState<string>(
-    typeof value === 'string' ? value : value.sm || '300px'
-  );
-
-  useEffect(() => {
-    function update() {
-      const w = window.innerWidth;
-
-      if (typeof value === 'string') {
-        setCurrent(value);
-        return;
-      }
-
-      if (w >= 1536 && value['2xl']) setCurrent(value['2xl']);
-      else if (w >= 1280 && value.xl) setCurrent(value.xl);
-      else if (w >= 1024 && value.lg) setCurrent(value.lg);
-      else if (w >= 768 && value.md) setCurrent(value.md);
-      else setCurrent(value.sm || '300px');
-    }
-
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, [value]);
-
-  return current;
-}
-
 export default function TiltedCard({
   imageSrc,
   altText = 'Tilted card image',
   caption = '',
-  containerHeight = '300px',
-  containerWidth = '100%',
-  imageHeight = '300px',
-  imageWidth = '300px',
+  containerHeight = "350px",
+  containerWidth = "100%",
+  imageHeight = "350px",
+  imageWidth = "100%",
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
+  themeContent,
   displayOverlayContent = false
 }: TiltedCardProps) {
-  const containerH = useResponsiveValue(containerHeight);
-  const containerW = useResponsiveValue(containerWidth);
-  const imageH = useResponsiveValue(imageHeight);
-  const imageW = useResponsiveValue(imageWidth);
+  // Logic to handle string vs object for dimensions
+  const containerH = containerHeight;
+  const containerW = containerWidth;
+  const imageH = imageHeight;
+  const imageW = imageWidth;
 
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useSpring(useMotionValue(0), springValues);
-  const rotateY = useSpring(useMotionValue(0), springValues);
+  
+  // Clean spring initializations
+  const rotateX = useSpring(0, springValues);
+  const rotateY = useSpring(0, springValues);
   const scale = useSpring(1, springValues);
-  const opacity = useSpring(0);
+  const opacity = useMotionValue(0);
   const rotateFigcaption = useSpring(0, {
     stiffness: 350,
     damping: 30,
     mass: 1
   });
 
-  const [lastY, setLastY] = useState(0);
+  // Ref for velocity to avoid re-renders during mouse move
+  const lastY = useRef(0);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
     if (!ref.current) return;
@@ -113,9 +81,9 @@ export default function TiltedCard({
     x.set(e.clientX - rect.left);
     y.set(e.clientY - rect.top);
 
-    const velocityY = offsetY - lastY;
+    const velocityY = offsetY - lastY.current;
     rotateFigcaption.set(-velocityY * 0.6);
-    setLastY(offsetY);
+    lastY.current = offsetY;
   }
 
   function handleMouseEnter() {
@@ -134,7 +102,7 @@ export default function TiltedCard({
   return (
     <figure
       ref={ref}
-      className="relative w-full h-full [perspective:800px] flex flex-col items-center justify-center"
+      className="relative w-full h-full perspective-midrange flex flex-col items-center justify-center"
       style={{
         height: containerH,
         width: containerW
@@ -150,7 +118,7 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="relative group [transform-style:preserve-3d]"
+        className="relative group transform-3d"
         style={{
           width: imageW,
           height: imageH,
@@ -162,7 +130,7 @@ export default function TiltedCard({
         <motion.img
           src={imageSrc}
           alt={altText}
-          className="absolute top-0 left-0 object-cover rounded-t-lg shadow-sm will-change-transform [transform:translateZ(0)] lg:rounded-l-l lg:rounded-t-none no-img-select group-hover:rounded-[15px] duration-300"
+          className="absolute top-0 left-0 object-cover rounded-t-lg shadow-sm will-change-transform transform-[translateZ(0)] duration-300 no-img-select group-hover:rounded-lg"
           style={{
             width: imageW,
             height: imageH
@@ -170,20 +138,29 @@ export default function TiltedCard({
         />
 
         {displayOverlayContent && overlayContent && (
-          <motion.div className="absolute top-0 left-0 z-[2] will-change-transform [transform:translateZ(30px)]">
+          <motion.div className="absolute top-0 left-0 z-2 will-change-transform transform-[translateZ(30px)]">
             {overlayContent}
           </motion.div>
         )}
+
+        <motion.div className='absolute bottom-0 right-0 z-2 p-2 will-change-transform transform-[translateZ(30px)]'>
+          {themeContent}
+        </motion.div>
+
       </motion.div>
 
       {showTooltip && (
         <motion.figcaption
-          className="pointer-events-none absolute border left-0 top-0 rounded-[4px] bg-white ms-4 px-[10px] py-[4px] text-[10px] text-[#2d2d2d] opacity-0 z-[3] max-w-3xs hidden sm:block"
+          className="pointer-events-none absolute border left-0 top-0 rounded-lg bg-white ms-4 px-2.5 py-1 text-[10px] text-[#2d2d2d] opacity-0 z-3 max-w-3xs hidden sm:block"
           style={{
             x,
             y,
             opacity,
             rotate: rotateFigcaption
+          }}
+          // Add this to ensure opacity is snappy and doesn't "get lost"
+          transition={{
+            opacity: { duration: 0.15, ease: "linear" }
           }}
         >
           {caption}

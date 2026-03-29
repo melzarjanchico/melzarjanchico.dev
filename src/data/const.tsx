@@ -1,5 +1,6 @@
 import { faFacebook, faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faFile } from "@fortawesome/free-solid-svg-icons";
+import Resume from '../assets/docs/Resume (Melzar Jan Chico, 2026).pdf'
 
 // Titles from the header
 export const MY_TITLES = [
@@ -32,5 +33,10 @@ export const MY_LINKS = [
         name: "Mail",
         link: "mailto:melzarjanchico@gmail.com",
         icon: faEnvelope,
+    },
+    {
+        name: "Resume",
+        link: Resume,
+        icon: faFile,
     },
 ]

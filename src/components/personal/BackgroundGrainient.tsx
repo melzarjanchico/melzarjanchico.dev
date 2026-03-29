@@ -1,11 +1,14 @@
 import React from "react";
-import Grainient from "../components/Grainient";
+import Grainient from "../Grainient";
+import type { ThemeItem } from "@/data/themes";
 
 interface BackgroundGrainientProps {
+  theme: ThemeItem,
   className?: string;
 }
 
 const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
+  theme,
   className = "",
 }) => {
   return (
@@ -13,9 +16,9 @@ const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
       className={`absolute inset-0 z-0 pointer-events-none ${className}`}
     >
       <Grainient
-        color1="#fdfce8"
-        color2="#e2ceb1"
-        color3="#c7a07a"
+        color1={theme.bgColor1}
+        color2={theme.bgColor2}
+        color3={theme.bgColor3}
         timeSpeed={0.5}
         colorBalance={-1}
         warpStrength={1}
@@ -26,7 +29,7 @@ const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
         blendSoftness={1}
         rotationAmount={500}
         noiseScale={4}
-        grainAmount={0.05}
+        grainAmount={0.03}
         grainScale={2}
         grainAnimated={false}
         contrast={1.5}

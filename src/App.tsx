@@ -1,46 +1,49 @@
+import { useState } from 'react';
 import './App.css'
 import ClickSpark from './components/ClickSpark'
-import BackgroundGrainient from './sections/BackgroundGrainient'
-import Header from './sections/Header'
-import { MY_EDUCATION, MY_EMPLOYMENT } from './data/experience'
-import MyExperience from './sections/MyExperience'
-import { Card } from './components/ui/card'
+import BackgroundGrainient from './components/personal/BackgroundGrainient'
+import Home from './sections/Home'
+import { initialTheme, type ThemeItem } from './data/themes';
 
 function App() {
+  const [isVisible, setIsVisible] = useState(true);
+  // Default theme color
+  const [themeColor, setThemeColor] = useState<ThemeItem>(initialTheme); 
+
   return (
     <>
       <ClickSpark
-        sparkColor="#000"
+        sparkColor={themeColor.secondaryColor}
         sparkSize={5}
         sparkRadius={10}
         sparkCount={6}
         duration={200}
       >
-        <div className="relative bg-white transition-colors duration-300">
-
+        <div 
+          className="relative bg-white min-h-screen overflow-hidden"
+          style={{
+            '--color-theme-primary': themeColor.primaryColor,
+            '--color-theme-primary-variant': themeColor.primaryColorVariant,
+            '--color-theme-secondary': themeColor.secondaryColor,
+          } as React.CSSProperties}
+        >
           {/* Grainient background */}
-          <BackgroundGrainient/>
+          <BackgroundGrainient theme={themeColor}/>
 
           {/* Content area */}
-          <div className="relative h-screen overflow-y-auto flex flex-col gap-6 items-center justify-start py-10 pt-10 lg:pt-15">
-
-            {/* Header */}
-            <Header/>
-
-            {/* History/Education */}
-            <MyExperience history={[
-              ...MY_EMPLOYMENT.map(job => ({ ...job, itemType: "work" })),
-              ...MY_EDUCATION.map(school => ({ ...school, itemType: "school" }))
-            ]}/>
-
-            <Card className='mx-auto w-full max-w-md px-6 py-8 lg:px-12 lg:max-w-4xl select-none relative'>
-              Test
-            </Card>
+          <div className="relative h-screen flex flex-row items-start justify-start transition-all duration-700">
+            
+            {/* Home Section */}
+            <Home 
+              isVisible={isVisible} 
+              setIsVisible={setIsVisible} 
+              themeColor={themeColor} 
+              setThemeColor={setThemeColor}
+            />
 
           </div>
         </div>
       </ClickSpark>
-      
     </>
   )
 }

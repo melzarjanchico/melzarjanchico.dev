@@ -25,6 +25,7 @@ interface GrainientProps {
   color2?: string;
   color3?: string;
   className?: string;
+  transitionSpeed?: number; // Added to control transition smoothness
 }
 
 const hexToRgb = (hex: string): [number, number, number] => {
@@ -32,6 +33,9 @@ const hexToRgb = (hex: string): [number, number, number] => {
   if (!result) return [1, 1, 1];
   return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255];
 };
+
+// Helper to lerp between two numbers
+const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t;
 
 const vertex = `#version 300 es
 in vec2 position;
@@ -147,9 +151,17 @@ const Grainient: React.FC<GrainientProps> = ({
   color1 = '#FF9FFC',
   color2 = '#5227FF',
   color3 = '#B19EEF',
-  className = ''
+  className = '',
+  transitionSpeed = 0.08 // roughly matches duration-500 feel
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Ref to track the "active" color values for the transition
+  const currentColors = useRef({
+    c1: hexToRgb(color1),
+    c2: hexToRgb(color2),
+    c3: hexToRgb(color3),
+  });
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -195,9 +207,9 @@ const Grainient: React.FC<GrainientProps> = ({
         uSaturation: { value: saturation },
         uCenterOffset: { value: new Float32Array([centerX, centerY]) },
         uZoom: { value: zoom },
-        uColor1: { value: new Float32Array(hexToRgb(color1)) },
-        uColor2: { value: new Float32Array(hexToRgb(color2)) },
-        uColor3: { value: new Float32Array(hexToRgb(color3)) }
+        uColor1: { value: new Float32Array(currentColors.current.c1) },
+        uColor2: { value: new Float32Array(currentColors.current.c2) },
+        uColor3: { value: new Float32Array(currentColors.current.c3) }
       }
     });
 
@@ -219,8 +231,27 @@ const Grainient: React.FC<GrainientProps> = ({
 
     let raf = 0;
     const t0 = performance.now();
+
     const loop = (t: number) => {
+      // 1. Get Target Colors from current props
+      const target1 = hexToRgb(color1);
+      const target2 = hexToRgb(color2);
+      const target3 = hexToRgb(color3);
+
+      // 2. Smoothly interpolate current values toward targets
+      const cur = currentColors.current;
+      for (let i = 0; i < 3; i++) {
+        cur.c1[i] = lerp(cur.c1[i], target1[i], transitionSpeed);
+        cur.c2[i] = lerp(cur.c2[i], target2[i], transitionSpeed);
+        cur.c3[i] = lerp(cur.c3[i], target3[i], transitionSpeed);
+      }
+
+      // 3. Update Uniforms
+      (program.uniforms.uColor1.value as Float32Array).set(cur.c1);
+      (program.uniforms.uColor2.value as Float32Array).set(cur.c2);
+      (program.uniforms.uColor3.value as Float32Array).set(cur.c3);
       (program.uniforms.iTime as { value: number }).value = (t - t0) * 0.001;
+
       renderer.render({ scene: mesh });
       raf = requestAnimationFrame(loop);
     };
@@ -236,28 +267,11 @@ const Grainient: React.FC<GrainientProps> = ({
       }
     };
   }, [
-    timeSpeed,
-    colorBalance,
-    warpStrength,
-    warpFrequency,
-    warpSpeed,
-    warpAmplitude,
-    blendAngle,
-    blendSoftness,
-    rotationAmount,
-    noiseScale,
-    grainAmount,
-    grainScale,
-    grainAnimated,
-    contrast,
-    gamma,
-    saturation,
-    centerX,
-    centerY,
-    zoom,
-    color1,
-    color2,
-    color3
+    timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed, 
+    warpAmplitude, blendAngle, blendSoftness, rotationAmount, 
+    noiseScale, grainAmount, grainScale, grainAnimated, 
+    contrast, gamma, saturation, centerX, centerY, zoom, 
+    color1, color2, color3, transitionSpeed
   ]);
 
   return <div ref={containerRef} className={`relative h-full w-full overflow-hidden ${className}`.trim()} />;

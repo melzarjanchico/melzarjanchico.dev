@@ -7,12 +7,12 @@ type MarqueeTextProps = {
   gap?: number;
 };
 
-export function MarqueeText({
+const MarqueeText: React.FC<MarqueeTextProps> = ({
   children,
   className = "",
   speed = 50,
   gap = 30,
-}: MarqueeTextProps) {
+}: MarqueeTextProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLSpanElement | null>(null);
 
@@ -45,7 +45,6 @@ export function MarqueeText({
       ref={containerRef}
       className={`relative overflow-hidden flex items-center ${className}`}
       style={{
-        // Mask only applies when moving
         WebkitMaskImage: shouldAnimate 
           ? 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)' 
           : 'none',
@@ -65,9 +64,6 @@ export function MarqueeText({
           {children}
         </span>
 
-        {/* FIX: Only render the duplicate and the gap if we actually need to scroll.
-           This prevents the "double text" bug on short titles.
-        */}
         {shouldAnimate && (
           <span style={{ paddingRight: `${gap}px` }} className="shrink-0">
             {children}
@@ -75,7 +71,6 @@ export function MarqueeText({
         )}
       </div>
 
-      {/* Static Keyframes - The -50% works perfectly because there are exactly 2 spans */}
       <style>{`
         @keyframes marquee-percent {
           0% { transform: translateX(0%); }
@@ -85,3 +80,5 @@ export function MarqueeText({
     </div>
   );
 }
+
+export default MarqueeText;
