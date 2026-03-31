@@ -91,11 +91,11 @@ const Home: React.FC<HomeProps> = ({
 
     return (
         <div 
-            className={`@container h-screen flex items-center justify-center transition-all duration-700 ease-in-out ${
+            className={`@container h-dvh flex items-center justify-center transition-all duration-700 ease-in-out ${
                 isVisible ? 'w-full' : 'w-full lg:w-[30%]'
             }`}
         >
-            <div className="flex flex-col px-6 select-none w-full max-w-lg">
+            <div className="flex flex-col p-6 select-none w-full max-w-lg h-full max-h-screen justify-center items-center min-h-0">
 
                 {/* Tilted Profile Pic */}
                 <TiltedCard
@@ -143,14 +143,24 @@ const Home: React.FC<HomeProps> = ({
                     }
                     themeContent={
                         <div className="relative flex flex-col items-center mr-3 mb-2">
-                            {/* The Theme Items Container (Moved above the button) */}
                             <div className="relative flex flex-col items-center mb-1">
                                 {THEMES_LIST
                                     .filter((color) => color.name !== themeColor.name)
                                     .map((color, index) => (
                                         <button
                                             key={color.name}
-                                            onClick={() => {setThemeColor(color); setIsOpen(!isOpen); handleOnMouseLeave()}}
+                                            onClick={(e) => {
+                                                // 1. Prevent the click from "activating" parent containers
+                                                e.stopPropagation();
+
+                                                setThemeColor(color);
+                                                setIsOpen(!isOpen);
+                                                handleOnMouseLeave();
+
+                                                // 2. Force the browser to lose focus on the button 
+                                                // This often clears the "sticky hover" on mobile
+                                                (e.currentTarget as HTMLButtonElement).blur();
+                                            }}
                                             style={{ 
                                                 backgroundColor: color.primaryColorVariant,
                                                 transform: isOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
@@ -168,31 +178,32 @@ const Home: React.FC<HomeProps> = ({
                                     ))
                                 }
                             </div>
-
-                            {/* The Main Toggle Button */}
                             <div 
                                 className="relative flex items-center group"
                                 onMouseEnter={() => handleOnMouseEnter("Change Themes")} 
                                 onMouseLeave={() => handleOnMouseLeave()}
                             >
                                 <button 
-                                    onClick={() => setIsOpen(!isOpen)}
-                                    className="size-4.5 bg-theme-primary-variant rounded-full transition-all duration-300 ease-out border border-zinc-800 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsOpen(!isOpen)
+                                    }}
+                                    className="size-4.5 bg-theme-primary-variant rounded-full transition-all duration-300 ease-out border border-zinc-900 cursor-pointer drop-shadow-[0_4px_10px_var(--color-theme-primary)]"
                                 />
                             </div>
                         </div>
                     }     
                 />
 
-                <Card className="flex-1 p-8 rounded-none rounded-b-lg gap-2 justify-center items-center flex flex-col shadow-lg border-t-0">
-                    <h3 className="font-light tracking-widest text-xs">HI, I AM</h3>
-                    <h1 className="scroll-m-20 font-extrabold tracking-tighter text-center text-4xl">
+                <Card className="flex-none w-full p-8 rounded-none rounded-b-lg gap-2 justify-center items-center flex flex-col shadow-lg border-t-0 min-h-0 overflow-hidden">
+                    <h3 className="font-light tracking-widest text-xs shrink-0">HI, I AM</h3>
+                    <h1 className="scroll-m-20 font-extrabold tracking-tighter leading-none text-center text-4xl shrink-0">
                         Melzar Jan Chico
                     </h1>
 
                     <LayoutGroup>
                         <motion.div
-                            className="flex flex-col justify-center text-center items-center text-zinc-800 @sm:flex-row" 
+                            className="flex flex-col justify-center text-center items-center text-zinc-800 @sm:flex-row min-h-0" 
                             layout
                         >
                             <motion.span
@@ -202,7 +213,7 @@ const Home: React.FC<HomeProps> = ({
                                 Passionate 
                             </motion.span>
                             
-                            <div className="mx-1">
+                            <div className="mx-1 shrink-0">
                                 <RotatingText
                                     texts={titles}
                                     mainClassName={`${headerClickablesStyle} inline-block px-2 rounded-sm`}
@@ -219,7 +230,7 @@ const Home: React.FC<HomeProps> = ({
                         </motion.div>
                     </LayoutGroup>
 
-                    <div className="flex gap-2 mt-4">
+                    <div className="flex gap-2 mt-4 shrink-0">
                         {links.map((item) => (
                             <a
                                 key={item.name}
@@ -237,7 +248,7 @@ const Home: React.FC<HomeProps> = ({
                     <Button 
                         onClick={() => setIsVisible(!isVisible)} 
                         variant="outline"
-                        className="mt-6 w-full border-zinc-200 cursor-pointer hover:border-theme-primary-variant hover:bg-theme-primary/20"
+                        className="mt-4 w-full border-zinc-200 cursor-pointer hover:border-theme-primary-variant hover:bg-theme-primary/20 shrink-0"
                     >
                         {isVisible ? "More About Me" : "Back to Home"}
                     </Button>

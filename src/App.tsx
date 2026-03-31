@@ -20,7 +20,7 @@ function App() {
         duration={200}
       >
         <div 
-          className="relative bg-white min-h-screen overflow-hidden"
+          className="relative bg-white h-dvh overflow-hidden"
           style={{
             '--color-theme-primary': themeColor.primaryColor,
             '--color-theme-primary-variant': themeColor.primaryColorVariant,
@@ -31,7 +31,7 @@ function App() {
           <BackgroundGrainient theme={themeColor}/>
 
           {/* Content area */}
-          <div className="relative h-screen flex flex-row items-start justify-start transition-all duration-700">
+          <div className="relative h-dvh flex flex-row items-start justify-start transition-all duration-700">
             
             {/* Home Section */}
             <Home 

@@ -25,13 +25,18 @@ const springValues: SpringOptions = {
   mass: 2
 };
 
+const isTouchDevice = () => {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+};
+
 export default function TiltedCard({
   imageSrc,
   altText = 'Tilted card image',
   caption = '',
-  containerHeight = "350px",
+  containerHeight = "100%",
   containerWidth = "100%",
-  imageHeight = "350px",
+  imageHeight = "100%",
   imageWidth = "100%",
   scaleOnHover = 1.1,
   rotateAmplitude = 14,
@@ -41,17 +46,10 @@ export default function TiltedCard({
   themeContent,
   displayOverlayContent = false
 }: TiltedCardProps) {
-  // Logic to handle string vs object for dimensions
-  const containerH = containerHeight;
-  const containerW = containerWidth;
-  const imageH = imageHeight;
-  const imageW = imageWidth;
-
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   
-  // Clean spring initializations
   const rotateX = useSpring(0, springValues);
   const rotateY = useSpring(0, springValues);
   const scale = useSpring(1, springValues);
@@ -62,21 +60,18 @@ export default function TiltedCard({
     mass: 1
   });
 
-  // Ref for velocity to avoid re-renders during mouse move
   const lastY = useRef(0);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
-    if (!ref.current) return;
+    // Existing mobile width check + touch check
+    if (!ref.current || window.innerWidth < 640 || isTouchDevice()) return;
 
     const rect = ref.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left - rect.width / 2;
     const offsetY = e.clientY - rect.top - rect.height / 2;
 
-    const rotationX = (offsetY / (rect.height / 2)) * -rotateAmplitude;
-    const rotationY = (offsetX / (rect.width / 2)) * rotateAmplitude;
-
-    rotateX.set(rotationX);
-    rotateY.set(rotationY);
+    rotateX.set((offsetY / (rect.height / 2)) * -rotateAmplitude);
+    rotateY.set((offsetX / (rect.width / 2)) * rotateAmplitude);
 
     x.set(e.clientX - rect.left);
     y.set(e.clientY - rect.top);
@@ -87,41 +82,46 @@ export default function TiltedCard({
   }
 
   function handleMouseEnter() {
+    // If it's mobile/touch, we don't want the card to stay "stuck" zoomed in
+    if (isTouchDevice()) return;
+
     scale.set(scaleOnHover);
     opacity.set(1);
   }
 
   function handleMouseLeave() {
-    opacity.set(0);
-    scale.set(1);
     rotateX.set(0);
     rotateY.set(0);
+    scale.set(1);
     rotateFigcaption.set(0);
+    opacity.set(0);
   }
 
   return (
     <figure
       ref={ref}
-      className="relative w-full h-full perspective-midrange flex flex-col items-center justify-center"
+      className="relative w-full shrink min-h-0 perspective-midrange flex flex-col items-center justify-center transition-all duration-300 ease-out"
       style={{
-        height: containerH,
-        width: containerW
+        height: containerHeight,
+        width: containerWidth,
+        maxHeight: "350px" 
       }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {showMobileWarning && (
-        <div className="absolute top-4 text-center text-sm block sm:hidden">
-          This effect is not optimized for mobile. Check on desktop.
+        <div className="absolute top-4 text-center text-sm block sm:hidden z-10 bg-black/50 text-white px-2 py-1 rounded">
+          This effect is not optimized for mobile.
         </div>
       )}
 
       <motion.div
-        className="relative group transform-3d"
+        className="relative group transform-3d w-full h-full min-h-0 transition-all duration-300 ease-out"
         style={{
-          width: imageW,
-          height: imageH,
+          width: imageWidth,
+          height: imageHeight,
+          maxHeight: "350px", 
           rotateX,
           rotateY,
           scale
@@ -130,11 +130,8 @@ export default function TiltedCard({
         <motion.img
           src={imageSrc}
           alt={altText}
-          className="absolute top-0 left-0 object-cover rounded-t-lg shadow-sm will-change-transform transform-[translateZ(0)] duration-300 no-img-select group-hover:rounded-lg"
-          style={{
-            width: imageW,
-            height: imageH
-          }}
+          className="block w-full h-full object-cover rounded-t-lg shadow-sm will-change-transform transform-[translateZ(0)] duration-300 no-img-select group-hover:rounded-lg"
+          style={{ maxHeight: "350px" }}
         />
 
         {displayOverlayContent && overlayContent && (
@@ -146,22 +143,13 @@ export default function TiltedCard({
         <motion.div className='absolute bottom-0 right-0 z-2 p-2 will-change-transform transform-[translateZ(30px)]'>
           {themeContent}
         </motion.div>
-
       </motion.div>
 
       {showTooltip && (
         <motion.figcaption
           className="pointer-events-none absolute border left-0 top-0 rounded-lg bg-white ms-4 px-2.5 py-1 text-[10px] text-[#2d2d2d] opacity-0 z-3 max-w-3xs hidden sm:block"
-          style={{
-            x,
-            y,
-            opacity,
-            rotate: rotateFigcaption
-          }}
-          // Add this to ensure opacity is snappy and doesn't "get lost"
-          transition={{
-            opacity: { duration: 0.15, ease: "linear" }
-          }}
+          style={{ x, y, opacity, rotate: rotateFigcaption }}
+          transition={{ opacity: { duration: 0.15, ease: "linear" } }}
         >
           {caption}
         </motion.figcaption>
