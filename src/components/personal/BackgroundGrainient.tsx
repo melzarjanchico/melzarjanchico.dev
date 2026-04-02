@@ -1,9 +1,10 @@
 import React from "react";
+import { motion } from "framer-motion";
 import Grainient from "../Grainient";
 import type { ThemeItem } from "@/data/themes";
 
 interface BackgroundGrainientProps {
-  theme: ThemeItem,
+  theme: ThemeItem;
   className?: string;
 }
 
@@ -12,7 +13,10 @@ const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
   className = "",
 }) => {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className={`absolute inset-0 z-0 pointer-events-none ${className}`}
     >
       <Grainient
@@ -39,7 +43,7 @@ const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
         centerY={0}
         zoom={0.9}
       />
-    </div>
+    </motion.div>
   );
 };
 

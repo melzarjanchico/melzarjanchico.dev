@@ -1,15 +1,13 @@
-import { faFacebook, faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope, faFile } from "@fortawesome/free-solid-svg-icons";
+
+import { RiLinkedinBoxFill, RiGithubFill, RiFacebookCircleFill, RiMailFill, RiFileTextFill } from "react-icons/ri";
 import Resume from '../assets/docs/Resume (Melzar Jan Chico, 2026).pdf'
 
 // Titles from the header
 export const MY_TITLES = [
     '🚀 Software Engineer',
-    '🎨 Frontend Developer',
-    '⚙️ Backend Developer',
-    '🎮 Game Developer',
+    '🛠️ Full Stack Developer',
     '🔎 Data Analyst',
-    '🤖 AI Enthusiast',
+    '🤖 AI/ML Engineer'
 ];
 
 // Links for redirection
@@ -17,26 +15,26 @@ export const MY_LINKS = [
     {
         name: "Linkedin",
         link: "https://www.linkedin.com/in/melzarjanchico",
-        icon: faLinkedin,
-    },
-    {
-        name: "Github",
-        link: "https://github.com/melzarjanchico",
-        icon: faGithub,
+        icon: <RiLinkedinBoxFill/>,
     },
     {
         name: "Facebook",
         link: "https://www.facebook.com/melzarjanchico",
-        icon: faFacebook,
+        icon: <RiFacebookCircleFill/>,
+    },
+    {
+        name: "Github",
+        link: "https://github.com/melzarjanchico",
+        icon: <RiGithubFill/>,
     },
     {
         name: "Mail",
         link: "mailto:melzarjanchico@gmail.com",
-        icon: faEnvelope,
+        icon: <RiMailFill/>,
     },
     {
         name: "Resume",
         link: Resume,
-        icon: faFile,
+        icon: <RiFileTextFill/>,
     },
 ]

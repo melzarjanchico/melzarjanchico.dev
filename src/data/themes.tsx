@@ -58,17 +58,8 @@ const fancyThat: ThemeItem = {
   secondaryColor: "#EF4444" 
 };
 
-export const THEMES_LIST = [sweetener, lover, sour, hitMeHardAndSoft, fancyThat];
+export const THEMES_LIST: ThemeItem[] = [sweetener, lover, sour, hitMeHardAndSoft, fancyThat];
 
-export const MY_THEMES = {
-    sweetener,
-    lover,
-    sour,
-    hitMeHardAndSoft,
-    fancyThat,
-    // This satisfies the "Array-like" requirement for MY_THEMES[0]
-    map: THEMES_LIST.map.bind(THEMES_LIST), 
-    length: THEMES_LIST.length
-};
-
-export const initialTheme = MY_THEMES.sweetener;
+export const getTheme = (name: string): ThemeItem => {
+  return THEMES_LIST.find((theme) => theme.name === name) || THEMES_LIST[0];
+}

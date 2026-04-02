@@ -4,8 +4,6 @@ import { LayoutGroup, motion } from "motion/react";
 import RotatingText from "@/components/RotatingText";
 import Chico from '../assets/header/ChicoProfile.jpg'
 import { Badge } from "@/components/ui/badge";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { MY_TITLES as titles, MY_LINKS as links } from "@/data/const";
 import ReactCountryFlag from "react-country-flag";
 import { useEffect, useState } from "react";
@@ -14,13 +12,17 @@ import type { CurrentTrackSuccessResponse, SpotityMainPublicServiceResponse } fr
 import MarqueeText from "@/components/personal/Marquee";
 import AudioWave from "@/components/personal/AudioWave";
 import { Button } from "@/components/ui/button";
-import { MY_THEMES, THEMES_LIST, type ThemeItem } from "@/data/themes";
+import { THEMES_LIST, type ThemeItem } from "@/data/themes";
+import { FaCircle } from "react-icons/fa6";
+import { RiSunFill, RiMoonClearFill, RiCheckboxBlankCircleFill, RiPaletteFill } from "react-icons/ri";
 
 type HomeProps = {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   themeColor: ThemeItem;
   setThemeColor: (colorTheme: ThemeItem) => void;
+  themeMode: string;
+  toggleMode: () => void;
 };
 
 const Home: React.FC<HomeProps> = ({ 
@@ -28,6 +30,8 @@ const Home: React.FC<HomeProps> = ({
   setIsVisible,
   themeColor,
   setThemeColor,
+  themeMode,
+  toggleMode,
 }: HomeProps) => {
     const [caption, setCaption] = useState<React.ReactNode>("Melzar Jan Chico");
     const [showCaption, setShowCaption] = useState(false);
@@ -108,91 +112,128 @@ const Home: React.FC<HomeProps> = ({
                     showTooltip={showCaption}
                     displayOverlayContent={true}
                     overlayContent={
-                        <div className="flex flex-wrap gap-1 m-6">
-                            <Badge 
-                                className={badgeDefaultStyle}
-                                onMouseEnter={() => handleOnMouseEnter("Open for Work")}
-                                onMouseLeave={() => handleOnMouseLeave()}
-                            >
-                                <FontAwesomeIcon icon={faCircle} className="text-green-500 text-[8px] mr-1"/>
-                                <span className="text-xs">Open To Work</span>
-                            </Badge>
+                        <div className="flex items-start justify-between m-6">
+                            <div className="flex flex-wrap gap-1">
+                                <Badge 
+                                    className={badgeDefaultStyle}
+                                    onMouseEnter={() => handleOnMouseEnter("Open for Work")}
+                                    onMouseLeave={() => handleOnMouseLeave()}
+                                >
+                                    <span><FaCircle className="text-green-500 text-[8px] mr-1"/></span>
+                                    <span className="text-xs">Open To Work</span>
+                                </Badge>
 
-                            <Badge 
-                                className={badgeDefaultStyle} 
-                                onMouseEnter={() => handleOnMouseEnter("Based on Cebu City, Philippines")}
-                                onMouseLeave={() => handleOnMouseLeave()}
-                            >
-                                <ReactCountryFlag svg countryCode={"PH"} style={{width: '1em', height: '1em', marginRight: '4px'}}/>
-                                <span className="text-xs">Cebu</span>
-                            </Badge>
+                                <Badge 
+                                    className={badgeDefaultStyle} 
+                                    onMouseEnter={() => handleOnMouseEnter("Based on Cebu City, Philippines")}
+                                    onMouseLeave={() => handleOnMouseLeave()}
+                                >
+                                    <ReactCountryFlag svg countryCode={"PH"} style={{width: '1em', height: '1em', marginRight: '4px'}}/>
+                                    <span className="text-xs">Cebu</span>
+                                </Badge>
 
-                            <Badge 
-                                className={`${badgeDefaultStyle} transition-all duration-700 ease-in-out ${
-                                    showPlaying && currentTrack 
-                                    ? "opacity-100" 
-                                    : "opacity-0 pointer-events-none"
-                                }`} 
-                                onMouseEnter={() => handleOnMouseEnter(nowPlayingCaption())} 
-                                onMouseLeave={() => handleOnMouseLeave()}
-                            >
-                            <AudioWave animate={currentTrack?.is_playing}/>
-                            <span className="text-xs ml-1">On Spotify</span>
-                            </Badge>
+                                <Badge 
+                                    className={`${badgeDefaultStyle} transition-all duration-700 ease-in-out ${
+                                        showPlaying && currentTrack 
+                                        ? "opacity-100" 
+                                        : "opacity-0 pointer-events-none"
+                                    }`} 
+                                    onMouseEnter={() => showPlaying && currentTrack && handleOnMouseEnter(nowPlayingCaption())} 
+                                    onMouseLeave={() => handleOnMouseLeave()}
+                                >
+                                    <AudioWave animate={currentTrack?.is_playing}/>
+                                    <span className="text-xs ml-1">On Spotify</span>
+                                </Badge>
+                            </div>
                         </div>
                     }
                     themeContent={
-                        <div className="relative flex flex-col items-center mr-3 mb-2">
-                            <div className="relative flex flex-col items-center mb-1">
-                                {THEMES_LIST
-                                    .filter((color) => color.name !== themeColor.name)
-                                    .map((color, index) => (
-                                        <button
-                                            key={color.name}
-                                            onClick={(e) => {
-                                                // 1. Prevent the click from "activating" parent containers
-                                                e.stopPropagation();
-
-                                                setThemeColor(color);
-                                                setIsOpen(!isOpen);
-                                                handleOnMouseLeave();
-
-                                                // 2. Force the browser to lose focus on the button 
-                                                // This often clears the "sticky hover" on mobile
-                                                (e.currentTarget as HTMLButtonElement).blur();
-                                            }}
-                                            style={{ 
-                                                backgroundColor: color.primaryColorVariant,
-                                                transform: isOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
-                                                zIndex: MY_THEMES.length - index,
-                                                transitionDelay: isOpen ? `${index * 30}ms` : `${(MY_THEMES.length - index) * 30}ms`
-                                            }}
-                                            className={`
-                                                absolute bottom-0 size-4.5 rounded-full border transition-all duration-300 ease-out cursor-pointer 
-                                                ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'} 
-                                                ${themeColor.name === color.name ? 'border-zinc-800' : 'border-transparent'}
-                                            `}
-                                            onMouseEnter={() => handleOnMouseEnter(color.name)} 
-                                            onMouseLeave={() => handleOnMouseLeave()}
-                                        />
-                                    ))
-                                }
-                            </div>
-                            <div 
-                                className="relative flex items-center group"
-                                onMouseEnter={() => handleOnMouseEnter("Change Themes")} 
+                        <div className="flex justify-end gap-1 m-6">
+                            {/* Theme Mode Toggler */}
+                            <div
+                                className="flex items-end justify-center"
+                                onMouseEnter={() => handleOnMouseEnter(`${(themeMode === "light") ? "Dark" : "Light"} Mode`)} 
                                 onMouseLeave={() => handleOnMouseLeave()}
                             >
                                 <button 
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setIsOpen(!isOpen)
+                                    onClick={() => {
+                                        toggleMode();
+                                        setCaption((themeMode === "light") ? "Light Mode" : "Dark Mode");
                                     }}
-                                    className="size-4.5 bg-theme-primary-variant rounded-full transition-all duration-300 ease-out border border-zinc-900 cursor-pointer drop-shadow-[0_4px_10px_var(--color-theme-primary)]"
-                                />
+                                    className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
+                                >
+                                    <span 
+                                        className="block transition-all duration-300 text-xl"
+                                        style={{ 
+                                            color: 'var(--color-theme-primary-variant)',
+                                            filter: `drop-shadow(0 0 2px var(--color-zinc-600))` 
+                                        }}
+                                    >
+                                        {(themeMode === "light") ? <RiMoonClearFill/> : <RiSunFill/>}
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div className="flex flex-col">
+                                {/* Theme Color Picker */}
+                                <div className="relative flex flex-col items-center mb-3">
+                                    {THEMES_LIST
+                                        .filter((color) => color.name !== themeColor.name)
+                                        .map((color, index) => (
+                                            <button
+                                                key={color.name}
+                                                onClick={() => {
+                                                    setThemeColor(color);
+                                                    setIsOpen(!isOpen);
+                                                    handleOnMouseLeave();
+                                                }}
+                                                onMouseEnter={() => handleOnMouseEnter(color.name)} 
+                                                onMouseLeave={() => handleOnMouseLeave()}
+                                                className="relative w-5 flex items-center justify-center"
+                                            >
+                                                <span 
+                                                    className={`absolute rounded-full transition-all duration-300 ease-out cursor-pointer text-xl ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                                                    style={{ 
+                                                        color: color.primaryColorVariant,
+                                                        // Use a slightly larger multiplier if they feel too cramped
+                                                        transform: isOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
+                                                        zIndex: THEMES_LIST.length - index,
+                                                        transitionDelay: isOpen ? `${index * 30}ms` : `${(THEMES_LIST.length - index) * 30}ms`,
+                                                    }}
+                                                >
+                                                    <RiCheckboxBlankCircleFill/>
+                                                </span>
+                                            </button>
+                                        ))
+                                    }
+                                </div>
+
+                                {/* Theme Color Button */}
+                                <div 
+                                    className="relative flex items-center justify-center"
+                                    onMouseEnter={() => handleOnMouseEnter("Change Themes")} 
+                                    onMouseLeave={() => handleOnMouseLeave()}
+                                >
+                                    <button 
+                                        onClick={() => {
+                                            setIsOpen(!isOpen)
+                                        }}
+                                        className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
+                                    >
+                                        <span 
+                                            className="block transition-all duration-300 text-xl"
+                                            style={{ 
+                                                color: 'var(--color-theme-primary-variant)',
+                                                filter: `drop-shadow(0 0 2px var(--color-zinc-600))` 
+                                            }}
+                                        >
+                                            <RiPaletteFill/>
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    }     
+                    }  
                 />
 
                 <Card className="flex-none w-full p-8 rounded-none rounded-b-lg gap-2 justify-center items-center flex flex-col shadow-lg border-t-0 min-h-0 overflow-hidden">
@@ -203,7 +244,7 @@ const Home: React.FC<HomeProps> = ({
 
                     <LayoutGroup>
                         <motion.div
-                            className="flex flex-col justify-center text-center items-center text-zinc-800 @sm:flex-row min-h-0" 
+                            className="flex flex-col justify-center text-center items-center text-zinc-800 min-h-0 sm:flex-row" 
                             layout
                         >
                             <motion.span
@@ -224,7 +265,7 @@ const Home: React.FC<HomeProps> = ({
                                     staggerDuration={0.025}
                                     splitLevelClassName="overflow-hidden"
                                     transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-                                    rotationInterval={2000}
+                                    rotationInterval={3000}
                                 />
                             </div>
                         </motion.div>
@@ -238,9 +279,9 @@ const Home: React.FC<HomeProps> = ({
                                 href={item.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`${headerClickablesStyle} flex size-8 items-center justify-center rounded-full text-zinc-800 text-sm hover:scale-110`}
+                                className={`${headerClickablesStyle} flex size-8 items-center justify-center rounded-full text-zinc-800 text-md hover:scale-110`}
                             >
-                                <FontAwesomeIcon icon={item.icon} />
+                                {item.icon}
                             </a>
                         ))}
                     </div>
@@ -250,7 +291,7 @@ const Home: React.FC<HomeProps> = ({
                         variant="outline"
                         className="mt-4 w-full border-zinc-200 cursor-pointer hover:border-theme-primary-variant hover:bg-theme-primary/20 shrink-0"
                     >
-                        {isVisible ? "More About Me" : "Back to Home"}
+                        <span className="truncate">{isVisible ? "More About Me" : "Back to Home"}</span>
                     </Button>
                 </Card>
             </div>

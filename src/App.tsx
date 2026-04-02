@@ -3,12 +3,37 @@ import './App.css'
 import ClickSpark from './components/ClickSpark'
 import BackgroundGrainient from './components/personal/BackgroundGrainient'
 import Home from './sections/Home'
-import { initialTheme, type ThemeItem } from './data/themes';
+import { getTheme, type ThemeItem } from './data/themes';
+import { usePerformanceCheck } from './hooks/usePeformanceCheck';
+import { useIsLowEndDevice } from './hooks/useIsLowEndDevice';
 
 function App() {
   const [isVisible, setIsVisible] = useState(true);
-  // Default theme color
-  const [themeColor, setThemeColor] = useState<ThemeItem>(initialTheme); 
+
+  const [themeMode, setThemeMode] = useState(() => {
+    const storedMode = localStorage.getItem("mode") || "light"
+    return storedMode;
+  })
+
+  const [themeColor, setThemeColor] = useState<ThemeItem>(() => {
+    const storedTheme = localStorage.getItem("theme") || "sweetener"
+    return getTheme(storedTheme);
+  }); 
+
+  const toggleMode = () => {
+    const mode = (themeMode === "light") ? "dark" : "light";
+
+    setThemeMode(mode);
+    localStorage.setItem("mode", mode);
+  }
+
+  const toggleTheme = (color: ThemeItem) => {
+    setThemeColor(color);
+    localStorage.setItem("theme", color.name);
+  }
+
+  const isLowEndDevice = useIsLowEndDevice();
+  const isSlow = usePerformanceCheck();
 
   return (
     <>
@@ -19,16 +44,23 @@ function App() {
         sparkCount={6}
         duration={200}
       >
-        <div 
-          className="relative bg-white h-dvh overflow-hidden"
+        <div
+          className="relative h-dvh overflow-hidden"
           style={{
             '--color-theme-primary': themeColor.primaryColor,
             '--color-theme-primary-variant': themeColor.primaryColorVariant,
             '--color-theme-secondary': themeColor.secondaryColor,
           } as React.CSSProperties}
         >
-          {/* Grainient background */}
-          <BackgroundGrainient theme={themeColor}/>
+          {/* Conditional Rendering based on hardware */}
+          {isLowEndDevice || isSlow ? (
+             <div style={{ 
+                backgroundColor: themeColor.bgColor1,
+                transition: 'background-color 0.5s ease, --color-theme-primary 0.5s ease, --color-theme-primary-variant 0.5s ease, --color-theme-secondary 0.5s ease',
+            }} className="absolute inset-0" />
+          ) : (
+             <BackgroundGrainient theme={themeColor}/>
+          )}
 
           {/* Content area */}
           <div className="relative h-dvh flex flex-row items-start justify-start transition-all duration-700">
@@ -38,7 +70,9 @@ function App() {
               isVisible={isVisible} 
               setIsVisible={setIsVisible} 
               themeColor={themeColor} 
-              setThemeColor={setThemeColor}
+              setThemeColor={toggleTheme}
+              themeMode={themeMode}
+              toggleMode={toggleMode}
             />
 
           </div>
