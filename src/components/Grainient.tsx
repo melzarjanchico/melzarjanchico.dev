@@ -25,7 +25,8 @@ interface GrainientProps {
   color2?: string;
   color3?: string;
   className?: string;
-  transitionSpeed?: number; // Added to control transition smoothness
+  transitionSpeed?: number; 
+  isDarkMode?: boolean;
 }
 
 const hexToRgb = (hex: string): [number, number, number] => {
@@ -69,6 +70,7 @@ uniform float uZoom;
 uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform vec3 uColor3;
+uniform float uDim;
 out vec4 fragColor;
 #define S(a,b,t) smoothstep(a,b,t)
 mat2 Rot(float a){float s=sin(a),c=cos(a);return mat2(c,-s,s,c);} 
@@ -119,7 +121,7 @@ void mainImage(out vec4 o, vec2 C){
   col=pow(max(col,0.0),vec3(1.0/max(uGamma,0.001)));
   col=clamp(col,0.0,1.0);
 
-  o=vec4(col,1.0);
+  o=vec4(col * uDim, 1.0);
 }
 void main(){
   vec4 o=vec4(0.0);
@@ -152,16 +154,18 @@ const Grainient: React.FC<GrainientProps> = ({
   color2 = '#5227FF',
   color3 = '#B19EEF',
   className = '',
-  transitionSpeed = 0.08 // roughly matches duration-500 feel
+  transitionSpeed = 0.08,
+  isDarkMode = false
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   
-  // Ref to track the "active" color values for the transition
+  // Refs for tracking active values
   const currentColors = useRef({
     c1: hexToRgb(color1),
     c2: hexToRgb(color2),
     c3: hexToRgb(color3),
   });
+  const currentDim = useRef(1.0);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -209,7 +213,8 @@ const Grainient: React.FC<GrainientProps> = ({
         uZoom: { value: zoom },
         uColor1: { value: new Float32Array(currentColors.current.c1) },
         uColor2: { value: new Float32Array(currentColors.current.c2) },
-        uColor3: { value: new Float32Array(currentColors.current.c3) }
+        uColor3: { value: new Float32Array(currentColors.current.c3) },
+        uDim: { value: currentDim.current }
       }
     });
 
@@ -233,10 +238,11 @@ const Grainient: React.FC<GrainientProps> = ({
     const t0 = performance.now();
 
     const loop = (t: number) => {
-      // 1. Get Target Colors from current props
+      // 1. Get Target Colors and Dimming factor
       const target1 = hexToRgb(color1);
       const target2 = hexToRgb(color2);
       const target3 = hexToRgb(color3);
+      const targetDim = isDarkMode ? 0.2 : 1.0;
 
       // 2. Smoothly interpolate current values toward targets
       const cur = currentColors.current;
@@ -245,11 +251,13 @@ const Grainient: React.FC<GrainientProps> = ({
         cur.c2[i] = lerp(cur.c2[i], target2[i], transitionSpeed);
         cur.c3[i] = lerp(cur.c3[i], target3[i], transitionSpeed);
       }
+      currentDim.current = lerp(currentDim.current, targetDim, transitionSpeed);
 
       // 3. Update Uniforms
       (program.uniforms.uColor1.value as Float32Array).set(cur.c1);
       (program.uniforms.uColor2.value as Float32Array).set(cur.c2);
       (program.uniforms.uColor3.value as Float32Array).set(cur.c3);
+      (program.uniforms.uDim as { value: number }).value = currentDim.current;
       (program.uniforms.iTime as { value: number }).value = (t - t0) * 0.001;
 
       renderer.render({ scene: mesh });
@@ -271,7 +279,7 @@ const Grainient: React.FC<GrainientProps> = ({
     warpAmplitude, blendAngle, blendSoftness, rotationAmount, 
     noiseScale, grainAmount, grainScale, grainAnimated, 
     contrast, gamma, saturation, centerX, centerY, zoom, 
-    color1, color2, color3, transitionSpeed
+    color1, color2, color3, transitionSpeed, isDarkMode
   ]);
 
   return <div ref={containerRef} className={`relative h-full w-full overflow-hidden ${className}`.trim()} />;

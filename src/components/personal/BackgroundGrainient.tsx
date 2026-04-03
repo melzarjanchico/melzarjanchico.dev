@@ -5,11 +5,13 @@ import type { ThemeItem } from "@/data/themes";
 
 interface BackgroundGrainientProps {
   theme: ThemeItem;
+  mode: string;
   className?: string;
 }
 
 const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
   theme,
+  mode,
   className = "",
 }) => {
   return (
@@ -42,6 +44,7 @@ const BackgroundGrainient: React.FC<BackgroundGrainientProps> = ({
         centerX={0}
         centerY={0}
         zoom={0.9}
+        isDarkMode={mode === "dark"}
       />
     </motion.div>
   );

@@ -120,7 +120,7 @@ const Home: React.FC<HomeProps> = ({
                                     onMouseLeave={() => handleOnMouseLeave()}
                                 >
                                     <span><FaCircle className="text-green-500 text-[8px] mr-1"/></span>
-                                    <span className="text-xs">Open To Work</span>
+                                    <span className="text-xs text-white">Open To Work</span>
                                 </Badge>
 
                                 <Badge 
@@ -129,11 +129,11 @@ const Home: React.FC<HomeProps> = ({
                                     onMouseLeave={() => handleOnMouseLeave()}
                                 >
                                     <ReactCountryFlag svg countryCode={"PH"} style={{width: '1em', height: '1em', marginRight: '4px'}}/>
-                                    <span className="text-xs">Cebu</span>
+                                    <span className="text-xs text-white">Cebu</span>
                                 </Badge>
 
                                 <Badge 
-                                    className={`${badgeDefaultStyle} transition-all duration-700 ease-in-out ${
+                                    className={`${badgeDefaultStyle} transition-all duration-500 ease-in-out ${
                                         showPlaying && currentTrack 
                                         ? "opacity-100" 
                                         : "opacity-0 pointer-events-none"
@@ -142,7 +142,7 @@ const Home: React.FC<HomeProps> = ({
                                     onMouseLeave={() => handleOnMouseLeave()}
                                 >
                                     <AudioWave animate={currentTrack?.is_playing}/>
-                                    <span className="text-xs ml-1">On Spotify</span>
+                                    <span className="text-xs ml-1 text-white">On Spotify</span>
                                 </Badge>
                             </div>
                         </div>
@@ -163,7 +163,7 @@ const Home: React.FC<HomeProps> = ({
                                     className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                 >
                                     <span 
-                                        className="block transition-all duration-300 text-xl"
+                                        className="block transition-colors duration-500 text-xl"
                                         style={{ 
                                             color: 'var(--color-theme-primary-variant)',
                                             filter: `drop-shadow(0 0 2px var(--color-zinc-600))` 
@@ -195,7 +195,6 @@ const Home: React.FC<HomeProps> = ({
                                                     className={`absolute rounded-full transition-all duration-300 ease-out cursor-pointer text-xl ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                                                     style={{ 
                                                         color: color.primaryColorVariant,
-                                                        // Use a slightly larger multiplier if they feel too cramped
                                                         transform: isOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
                                                         zIndex: THEMES_LIST.length - index,
                                                         transitionDelay: isOpen ? `${index * 30}ms` : `${(THEMES_LIST.length - index) * 30}ms`,
@@ -221,7 +220,7 @@ const Home: React.FC<HomeProps> = ({
                                         className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                     >
                                         <span 
-                                            className="block transition-all duration-300 text-xl"
+                                            className="block transition-colors duration-500 text-xl"
                                             style={{ 
                                                 color: 'var(--color-theme-primary-variant)',
                                                 filter: `drop-shadow(0 0 2px var(--color-zinc-600))` 
@@ -244,12 +243,13 @@ const Home: React.FC<HomeProps> = ({
 
                     <LayoutGroup>
                         <motion.div
-                            className="flex flex-col justify-center text-center items-center text-zinc-800 min-h-0 sm:flex-row" 
+                            className="flex flex-col justify-center text-center items-center text-zinc-800 min-h-0 @sm:flex-row" 
                             layout
                         >
                             <motion.span
                                 layout
                                 transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+                                className="dark:text-white transition-colors duration-500 ease-in-out"
                             >
                                 Passionate 
                             </motion.span>
@@ -289,7 +289,7 @@ const Home: React.FC<HomeProps> = ({
                     <Button 
                         onClick={() => setIsVisible(!isVisible)} 
                         variant="outline"
-                        className="mt-4 w-full border-zinc-200 cursor-pointer hover:border-theme-primary-variant hover:bg-theme-primary/20 shrink-0"
+                        className="mt-4 w-full hover:border-theme-primary-variant dark:hover:border-theme-primary/50 hover:bg-theme-primary/20 shrink-0"
                     >
                         <span className="truncate">{isVisible ? "More About Me" : "Back to Home"}</span>
                     </Button>
