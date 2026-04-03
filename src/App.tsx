@@ -6,9 +6,10 @@ import Home from './sections/Home'
 import { getTheme, type ThemeItem } from './data/themes';
 import { usePerformanceCheck } from './hooks/usePeformanceCheck';
 import { useIsLowEndDevice } from './hooks/useIsLowEndDevice';
+import { Button } from './components/ui/button';
 
 function App() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [showContent, setShowContent] = useState(false);
 
   const [themeMode, setThemeMode] = useState(() => {
     const storedMode = localStorage.getItem("mode") || "light"
@@ -77,14 +78,32 @@ function App() {
           <div className="relative h-dvh flex flex-row items-start justify-start transition-all duration-500">
             
             {/* Home Section */}
-            <Home 
-              isVisible={isVisible} 
-              setIsVisible={setIsVisible} 
+            <Home
+              className={`h-dvh flex items-center justify-center transition-all duration-700 ease-in-out will-change-[flex,width]
+                ${showContent ? 'flex-[0.0001] opacity-0 pointer-events-none lg:flex-[0.3] lg:opacity-100 lg:pointer-events-auto' : 'flex-1 opacity-100'}
+              `}
+              isVisible={!showContent} 
+              setIsVisible={setShowContent} 
               themeColor={themeColor} 
               setThemeColor={toggleTheme}
               themeMode={themeMode}
               toggleMode={toggleMode}
             />
+
+            {/* Side Content */}
+            <div className={`@container h-dvh flex items-center justify-center transition-all duration-700 ease-in-out 
+              ${showContent ? 'flex-1 lg:flex-[0.7] opacity-100 visible' : 'flex-[0.0001] opacity-0 invisible pointer-events-none'}
+            `}>
+
+              <Button 
+                  onClick={() => setShowContent(!showContent)} 
+                  variant="outline"
+                  className="mt-4 hover:border-theme-primary-variant dark:hover:border-theme-primary/50 hover:bg-theme-primary/20 shrink-0 transition-colors duration-500"
+              >
+                  <span className="truncate">{!showContent ? "More About Me" : "Back to Home"}</span>
+              </Button>
+              
+            </div>
 
           </div>
         </div>

@@ -63,7 +63,7 @@ export default function TiltedCard({
   const lastY = useRef(0);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
-    // Existing mobile width check + touch check
+    // Disable logic for small screens or touch devices
     if (!ref.current || window.innerWidth < 640 || isTouchDevice()) return;
 
     const rect = ref.current.getBoundingClientRect();
@@ -82,8 +82,7 @@ export default function TiltedCard({
   }
 
   function handleMouseEnter() {
-    // If it's mobile/touch, we don't want the card to stay "stuck" zoomed in
-    if (isTouchDevice()) return;
+    if (window.innerWidth < 640 || isTouchDevice()) return;
 
     scale.set(scaleOnHover);
     opacity.set(1);
@@ -117,30 +116,31 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="relative group transform-3d w-full h-full min-h-0 transition-all duration-300 ease-out"
+        className="relative group w-full h-full min-h-0 transition-all duration-300 ease-out sm:transform-3d"
         style={{
           width: imageWidth,
           height: imageHeight,
           maxHeight: "350px", 
-          rotateX,
-          rotateY,
-          scale
+          // Animations only active above sm breakpoint
+          rotateX: typeof window !== 'undefined' && window.innerWidth >= 640 ? rotateX : 0,
+          rotateY: typeof window !== 'undefined' && window.innerWidth >= 640 ? rotateY : 0,
+          scale: typeof window !== 'undefined' && window.innerWidth >= 640 ? scale : 1
         }}
       >
-        <motion.img
+        <img
           src={imageSrc}
           alt={altText}
-          className="block w-full h-full object-cover rounded-t-lg shadow-sm will-change-transform transform-[translateZ(0)] duration-300 no-img-select group-hover:rounded-lg"
+          className="block w-full h-full object-cover rounded-t-lg shadow-sm will-change-transform duration-300 no-img-select sm:group-hover:rounded-lg sm:transform-[translateZ(0)]"
           style={{ maxHeight: "350px" }}
         />
 
         {displayOverlayContent && overlayContent && (
-          <motion.div className="w-full absolute top-0 left-0 z-2 will-change-transform transform-[translateZ(30px)]">
+          <motion.div className="w-full absolute top-0 left-0 z-2 will-change-transform sm:transform-[translateZ(30px)]">
             {overlayContent}
           </motion.div>
         )}
 
-        <motion.div className='w-full absolute bottom-0 right-0 z-2 will-change-transform transform-[translateZ(30px)]'>
+        <motion.div className='w-full absolute bottom-0 right-0 z-2 will-change-transform sm:transform-[translateZ(30px)]'>
           {themeContent}
         </motion.div>
       </motion.div>

@@ -17,21 +17,23 @@ import { FaCircle } from "react-icons/fa6";
 import { RiSunFill, RiMoonClearFill, RiCheckboxBlankCircleFill, RiPaletteFill } from "react-icons/ri";
 
 type HomeProps = {
-  isVisible: boolean;
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  themeColor: ThemeItem;
-  setThemeColor: (colorTheme: ThemeItem) => void;
-  themeMode: string;
-  toggleMode: () => void;
+    className: string;
+    isVisible: boolean;   
+    setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    themeColor: ThemeItem;
+    setThemeColor: (colorTheme: ThemeItem) => void;
+    themeMode: string;
+    toggleMode: () => void;
 };
 
-const Home: React.FC<HomeProps> = ({ 
-  isVisible = true,
-  setIsVisible,
-  themeColor,
-  setThemeColor,
-  themeMode,
-  toggleMode,
+const Home: React.FC<HomeProps> = ({
+    className,
+    isVisible = true,
+    setIsVisible,
+    themeColor,
+    setThemeColor,
+    themeMode,
+    toggleMode,
 }: HomeProps) => {
     const [caption, setCaption] = useState<React.ReactNode>("Melzar Jan Chico");
     const [showCaption, setShowCaption] = useState(false);
@@ -94,12 +96,8 @@ const Home: React.FC<HomeProps> = ({
     }
 
     return (
-        <div 
-            className={`@container h-dvh flex items-center justify-center transition-all duration-700 ease-in-out ${
-                isVisible ? 'w-full' : 'w-full lg:w-[30%]'
-            }`}
-        >
-            <div className="flex flex-col p-6 select-none w-full max-w-lg h-full max-h-screen justify-center items-center min-h-0">
+        <div className={`@container ${className}`}>
+            <div className="flex flex-col p-6 select-none w-full max-w-lg min-w-75 h-full max-h-screen justify-center items-center min-h-0">
 
                 {/* Tilted Profile Pic */}
                 <TiltedCard
@@ -244,10 +242,9 @@ const Home: React.FC<HomeProps> = ({
                     <LayoutGroup>
                         <motion.div
                             className="flex flex-col justify-center text-center items-center text-zinc-800 min-h-0 @sm:flex-row" 
-                            layout
                         >
                             <motion.span
-                                layout
+                                layout="position"
                                 transition={{ type: 'spring', damping: 30, stiffness: 400 }}
                                 className="dark:text-white transition-colors duration-500 ease-in-out"
                             >
@@ -287,7 +284,7 @@ const Home: React.FC<HomeProps> = ({
                     </div>
 
                     <Button 
-                        onClick={() => setIsVisible(!isVisible)} 
+                        onClick={() => setIsVisible(isVisible)} 
                         variant="outline"
                         className="mt-4 w-full hover:border-theme-primary-variant dark:hover:border-theme-primary/50 hover:bg-theme-primary/20 shrink-0 transition-colors duration-500"
                     >
