@@ -289,7 +289,7 @@ const Home: React.FC<HomeProps> = ({
                     <Button 
                         onClick={() => setIsVisible(!isVisible)} 
                         variant="outline"
-                        className="mt-4 w-full hover:border-theme-primary-variant dark:hover:border-theme-primary/50 hover:bg-theme-primary/20 shrink-0"
+                        className="mt-4 w-full hover:border-theme-primary-variant dark:hover:border-theme-primary/50 hover:bg-theme-primary/20 shrink-0 transition-colors duration-500"
                     >
                         <span className="truncate">{isVisible ? "More About Me" : "Back to Home"}</span>
                     </Button>
