@@ -6,7 +6,7 @@ interface AudioWaveProps {
 
 const AudioWave: React.FC<AudioWaveProps> = ({ 
   bars = 4,
-  color = "bg-theme-primary-variant",
+  color = "bg-theme-main",
   animate = true
 }: AudioWaveProps) => {
   const offsets = ["-0.6s", "-0.1s", "-0.4s", "-0.7s"];

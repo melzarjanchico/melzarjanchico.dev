@@ -18,14 +18,14 @@ export const MY_EMPLOYMENT = [
         setup: "onsite",
         image: work_kn,
         description: [
-            "Immersed with the IT support roles and functions of the company: handling computer hardware, managing inventory, and associated technical operations.",
+            <>Immersed with the IT support roles and functions: handling computer hardware, managing inventory, and associated technical operations.</>,
         ],
         skills: ['ms-office']
     },
     {
         id: "exp_002",
         name: "MYT SoftDev Solutions, Inc.",
-        position: "Frontend Developer Intern ",
+        position: "Software Developer Intern ",
         type: "internship",
         startDate: new Date('2021-11'),
         endDate: new Date('2022-04'),
@@ -33,9 +33,9 @@ export const MY_EMPLOYMENT = [
         setup: "remote",
         image: work_myt,
         description: [
-            "Developed the initial frontend ERP web application for a local health and beauty client using HTML, Bootstrap CSS, and ReactJS.",
-            "Honed with data modelling and schema creation using UML diagrams and basic graphic design using Figma.",
-            "Cooperated with project managers, backend developers, and designers to come up with efficient & effective solutions.",
+            <>Developed initial frontend ERP web application for a local health and beauty client using HTML, Bootstrap CSS, and ReactJS.</>,
+            <>Honed with data modelling and schema creation using UML diagrams and basic graphic design using Figma.</>,
+            <>Cooperated with project managers, backend developers, and designers to come up with efficient & effective solutions.</>,
         ],
         skills: [
             'html', 'css', 'javascript', 'typescript', 'react-js', 'bootstrap-css', 'figma', 'rest-api', 'git', 'github', 'vs-code',
@@ -52,8 +52,8 @@ export const MY_EMPLOYMENT = [
         setup: "remote",
         image: work_pj,
         description: [
-            "Visualized data and made interactive dashboards using Microsoft Power BI and related technologies.",
-            "Implemented SQL commands and queries utilizing MySQL and SQL Server Management Studio.",
+            <>Visualized data and made interactive dashboards using Microsoft Power BI and related technologies.</>,
+            <>Implemented SQL commands and queries utilizing MySQL and SQL Server Management Studio.</>,
         ],
         skills: [
             'sql', 't-sql', 'ms-power-bi',
@@ -70,9 +70,9 @@ export const MY_EMPLOYMENT = [
         image: work_pj,
         setup: "hybrid",
         description: [
-            "Developed and assisted on several dashboards using MS Power BI, including monitoring dashboards  and customer extraction dashboards on various core products for blasts and campaigns.",
-            "Designed various automation flows that catered to a long-time daily request using MS Power Automate and Python, which made the process much faster, reduced the constant emails and risks of human error.",
-            "Wrote T-SQL queries, made reports using MS Office tools, and communicated with various key personnel to serve data requests from different groups and departments.",
+            <>Developed and assisted on several dashboards using MS Power BI, including monitoring and customer extraction dashboards on various core products for blasts and campaigns.</>,
+            <>Designed various automation flows that catered to daily requests using MS Power Automate and Python, which made the process much faster, reduced the constant emails and risks of human error.</>,
+            <>Made T-SQL scripts, made reports using MS Office tools, and communicated with various key personnel to serve data requests from different groups and departments.</>,
         ],
         skills: [
             'python', 'sql', 't-sql', 'ms-office', 'ms-power-bi', 'ms-power-automate',
@@ -80,7 +80,7 @@ export const MY_EMPLOYMENT = [
     },
     {
         id: "exp_005",
-        name: "Talino Venture Studios",
+        name: "Talino Fintech Foundry",
         position: "Software Engineer",
         type: "full-time",
         startDate: new Date('2024-04'),
@@ -89,10 +89,10 @@ export const MY_EMPLOYMENT = [
         setup: "hybrid",
         image: work_talino,
         description: [
-            "Currently serving as a full stack developer for digital financial solutions provider for rural banks." ,
-            "Helped develop and maintain core platform banking microservices with ExpressJS. Supported development for a web-based teller application with ReactJS. ",
-            "Contributed to the front-end development across three e-commerce platforms for an international supermarket chain's digital marketplace ecosystem using ReactJS with Tailwind",
-            "Worked closely and cross-functionally with designers, engineers, and product leads in delivering high-quality, user-focused features within project timelines.",
+            <>Currently serving as a full stack developer for digital financial solutions provider for rural banks.</>,
+            <>Helped develop and maintain several core platform banking microservices with ExpressJS. Also supported development for a web-based teller application with ReactJS.</>,
+            <>Contributed to the front-end development across three e-commerce platforms for an international supermarket chain's digital marketplace ecosystem using ReactJS with Tailwind.</>,
+            <>Worked closely and cross-functionally with designers, engineers, and product leads in delivering high-quality, user-focused features within project timelines.</>,
         ],
         skills: [
             'html', 'css', 'javascript', 'typescript', 'react-js', 'tailwind-css', 'vite', 
@@ -113,7 +113,7 @@ export const MY_EDUCATION = [
         location: "Lapu-Lapu City, Philippines",
         image: school_sdlc,
         description: [
-            "Completed With Honors."
+            <>Completed <span className='italic'>With Honors</span>.</>
         ],
         skills: [
             'ms-office',
@@ -129,8 +129,8 @@ export const MY_EDUCATION = [
         location: "Lapu-Lapu City, Philippines",
         image: school_stec,
         description: [
-            "Graduated With Honors.",
-            "Research Awards: Regional Science and Technology Fair 2018 1st Place Winner, National Science and Technology Fair 2019 Finalist, Biosymposium Interschool Research Poster Presentation 3rd Place Winner",
+            <>Graduated <span className='italic'>With Honors</span>.</>,
+            <><span className='font-semibold'>Research Awards:</span> Regional Science and Technology Fair 2018 1st Place Winner, National Science and Technology Fair 2019 Finalist, Biosymposium Interschool Research Poster Presentation 3rd Place Winner</>,
         ],
         skills: [
             'html', 'css', 'ms-office', 'google-workspace', 'canva',
@@ -142,15 +142,15 @@ export const MY_EDUCATION = [
         degree: "Bachelor of Science",
         major: "Computer Science",
         startDate: new Date('2019-08'),
-        endDate: new Date('2023-07'),
+        endDate: new Date('2023-07'),   
         location: "Cebu City, Philippines",
         image: school_up,
         description: [
-            "Graduated Magna Cum Laude (GWA: 1.271). Consistent University Scholar (President's Lister). UPCAT Passer.",
-            "Relevant Coursework: Software Engineering, Database Systems, Machine Learning, Data Structures and Algorithms, Natural Language Processing, Object-Oriented Programming",
-            "Key Projects: COVID case detection through symptom checking using Naïve Bayes classifier; Simple IoT design for a weather-based food recommendation system; Prototype design for a Philippine-oriented rental service platform; CRM mobile application for a local Lechonan client.",
-            "Thesis Study: Multi-Label Video Game Genre Text Classification Using DistilBERT with Focal Loss Function (using Python libraries pandas, numpy, sklearn, pytorch, etc.)",
-            "CHED TES-TDP Scholar. UP Computer Science Guild Member. UP Cebu Google Developer Students Club Builder",
+            <>Graduated <span className='italic'>magna cum laude</span> (GWA: 1.271). Consistent University Scholar (President's Lister). UPCAT Passer.</>,
+            <><span className='font-semibold'>Relevant Coursework:</span> Software Engineering, Database Systems, Machine Learning, Data Structures and Algorithms, Natural Language Processing, Object-Oriented Programming</>,
+            <><span className='font-semibold'>Key Projects:</span> COVID case detection through symptom checking using Naïve Bayes classifier; Simple IoT design for a weather-based food recommendation system; Prototype design for a Philippine-oriented rental service platform; CRM mobile application for a local Lechonan client.</>,
+            <><span className='font-semibold'>Research Study:</span> Multi-Label Video Game Genre Text Classification Using DistilBERT with Focal Loss Function (using Python libraries pandas, numpy, sklearn, pytorch, etc.)</>,
+            <>CHED TES-TDP Scholar. UP Computer Science Guild Member. UP Cebu Google Developer Students Club Builder</>,
         ],
         skills: [
             'c', 'c-plus-plus', 'python', 'markdown', 'latex', 'notion', 'canva', 'agile-scrum', 'ms-office', 'google-workspace', 'vs-code'

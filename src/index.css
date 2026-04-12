@@ -5,11 +5,18 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  
+  --color-theme-main: var(--theme-main);
+
   --color-theme-primary: var(--theme-primary);
 
-  --color-theme-primary-variant: var(--theme-primary-variant);
+  --color-theme-primary-light: var(--theme-primary-light);
+
+  --color-theme-primary-dark: var(--theme-primary-dark);
 
   --color-theme-secondary: var(--theme-secondary);
+
+  --color-theme-bg: var(--theme-bg);
 }
 
 @theme inline {

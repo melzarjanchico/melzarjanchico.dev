@@ -4,7 +4,7 @@ import { LayoutGroup, motion } from "motion/react";
 import RotatingText from "@/components/RotatingText";
 import Chico from '../assets/header/ChicoProfile.jpg'
 import { Badge } from "@/components/ui/badge";
-import { MY_TITLES as titles, MY_LINKS as links } from "@/data/const";
+import { MY_TITLES as titles, MY_LINKS as links } from "@/data/links";
 import ReactCountryFlag from "react-country-flag";
 import { useEffect, useState } from "react";
 import { SpotifyMainPublicService } from "@/api/spotify/spotify-main-public";
@@ -12,9 +12,11 @@ import type { CurrentTrackSuccessResponse, SpotityMainPublicServiceResponse } fr
 import MarqueeText from "@/components/personal/Marquee";
 import AudioWave from "@/components/personal/AudioWave";
 import { Button } from "@/components/ui/button";
-import { THEMES_LIST, type ThemeItem } from "@/data/themes";
+import { commonButtonProperties, THEMES_LIST } from "@/data/themes";
 import { FaCircle } from "react-icons/fa6";
 import { RiSunFill, RiMoonClearFill, RiCheckboxBlankCircleFill, RiPaletteFill } from "react-icons/ri";
+import { useNavigate } from 'react-router-dom';
+import type { ThemeItem } from "@/data/models";
 
 type HomeProps = {
     className: string;
@@ -35,15 +37,22 @@ const Home: React.FC<HomeProps> = ({
     themeMode,
     toggleMode,
 }: HomeProps) => {
-    const [caption, setCaption] = useState<React.ReactNode>("Melzar Jan Chico");
+    // Captions
+    const [caption, setCaption] = useState<React.ReactNode>("Melzar Jan Chico"); 
     const [showCaption, setShowCaption] = useState(false);
+
+    // Current Track
     const [showPlaying, setShowPlaying] = useState(false);
     const [currentTrack, setCurrentTrack] = useState<CurrentTrackSuccessResponse | null>(null);
 
-    const [isOpen, setIsOpen] = useState(false);
+    // Theme Picker Open is Open
+    const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
 
+    // Shared Styles for Home card items
     const badgeDefaultStyle = "bg-black/60 font-light cursor-pointer";
-    const headerClickablesStyle = "bg-theme-primary shadow-md hover:bg-theme-primary-variant border border-theme-primary-variant transition-all duration-500 cursor-pointer";
+    const headerClickablesStyle = "bg-theme-primary-light shadow-md hover:bg-theme-primary border border-theme-main transition-all duration-500 cursor-pointer";
+
+    const navigate = useNavigate();
 
     const nowPlayingCaption = () => {
         return (
@@ -97,7 +106,7 @@ const Home: React.FC<HomeProps> = ({
 
     return (
         <div className={`@container ${className}`}>
-            <div className="flex flex-col p-6 select-none w-full max-w-lg min-w-75 h-full max-h-screen justify-center items-center min-h-0">
+            <div className="flex flex-col p-6 select-none w-full max-w-lg min-w-75 h-full min-h-0 max-h-screen justify-center items-center">
 
                 {/* Tilted Profile Pic */}
                 <TiltedCard
@@ -160,13 +169,7 @@ const Home: React.FC<HomeProps> = ({
                                     }}
                                     className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                 >
-                                    <span 
-                                        className="block transition-colors duration-500 text-xl"
-                                        style={{ 
-                                            color: 'var(--color-theme-primary-variant)',
-                                            filter: `drop-shadow(0 0 2px var(--color-zinc-600))` 
-                                        }}
-                                    >
+                                    <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_2px_var(--color-zinc-600))]">
                                         {(themeMode === "light") ? <RiMoonClearFill/> : <RiSunFill/>}
                                     </span>
                                 </button>
@@ -182,7 +185,7 @@ const Home: React.FC<HomeProps> = ({
                                                 key={color.name}
                                                 onClick={() => {
                                                     setThemeColor(color);
-                                                    setIsOpen(!isOpen);
+                                                    setIsThemePickerOpen(!isThemePickerOpen);
                                                     handleOnMouseLeave();
                                                 }}
                                                 onMouseEnter={() => handleOnMouseEnter(color.name)} 
@@ -190,12 +193,12 @@ const Home: React.FC<HomeProps> = ({
                                                 className="relative w-5 flex items-center justify-center"
                                             >
                                                 <span 
-                                                    className={`absolute rounded-full transition-all duration-300 ease-out cursor-pointer text-xl ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                                                    className={`absolute rounded-full transition-all duration-300 ease-out cursor-pointer text-xl ${isThemePickerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                                                     style={{ 
-                                                        color: color.primaryColorVariant,
-                                                        transform: isOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
+                                                        color: color.mainColor,
+                                                        transform: isThemePickerOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
                                                         zIndex: THEMES_LIST.length - index,
-                                                        transitionDelay: isOpen ? `${index * 30}ms` : `${(THEMES_LIST.length - index) * 30}ms`,
+                                                        transitionDelay: isThemePickerOpen ? `${index * 30}ms` : `${(THEMES_LIST.length - index) * 30}ms`,
                                                     }}
                                                 >
                                                     <RiCheckboxBlankCircleFill/>
@@ -213,17 +216,11 @@ const Home: React.FC<HomeProps> = ({
                                 >
                                     <button 
                                         onClick={() => {
-                                            setIsOpen(!isOpen)
+                                            setIsThemePickerOpen(!isThemePickerOpen)
                                         }}
                                         className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                     >
-                                        <span 
-                                            className="block transition-colors duration-500 text-xl"
-                                            style={{ 
-                                                color: 'var(--color-theme-primary-variant)',
-                                                filter: `drop-shadow(0 0 2px var(--color-zinc-600))` 
-                                            }}
-                                        >
+                                        <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_2px_var(--color-zinc-600))]">
                                             <RiPaletteFill/>
                                         </span>
                                     </button>
@@ -241,10 +238,11 @@ const Home: React.FC<HomeProps> = ({
 
                     <LayoutGroup>
                         <motion.div
-                            className="flex flex-col justify-center text-center items-center text-zinc-800 min-h-0 @sm:flex-row" 
+                            className="flex flex-col justify-center text-center items-center text-zinc-800 min-h-0 @sm:flex-row"
+                            layout
                         >
                             <motion.span
-                                layout="position"
+                                layout
                                 transition={{ type: 'spring', damping: 30, stiffness: 400 }}
                                 className="dark:text-white transition-colors duration-500 ease-in-out"
                             >
@@ -269,11 +267,12 @@ const Home: React.FC<HomeProps> = ({
                     </LayoutGroup>
 
                     <div className="flex gap-2 mt-4 shrink-0">
-                        {links.map((item) => (
+                        {links.filter((item) => item.main).map((item) => (
                             <a
                                 key={item.name}
                                 title={item.name}
                                 href={item.link}
+                                aria-label={item.name}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={`${headerClickablesStyle} flex size-8 items-center justify-center rounded-full text-zinc-800 text-md hover:scale-110`}
@@ -284,9 +283,16 @@ const Home: React.FC<HomeProps> = ({
                     </div>
 
                     <Button 
-                        onClick={() => setIsVisible(isVisible)} 
+                        onClick={() => {
+                            setIsVisible(isVisible);
+                            if (isVisible) {
+                                navigate('/history');
+                            } else {
+                                navigate('/');
+                            }
+                        }} 
                         variant="outline"
-                        className="mt-4 w-full hover:border-theme-primary-variant dark:hover:border-theme-primary/50 hover:bg-theme-primary/20 shrink-0 transition-colors duration-500"
+                        className={`mt-4 w-full ${commonButtonProperties()}`}
                     >
                         <span className="truncate">{isVisible ? "More About Me" : "Back to Home"}</span>
                     </Button>
