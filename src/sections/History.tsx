@@ -71,7 +71,7 @@ const History: React.FC<HistoryProps> = ({ history }) => {
             }}
             className={`px-2.5 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all duration-500 cursor-pointer ${
               filter === type
-                ? "bg-theme-primary border border-theme-primary-dark dark:bg-theme-primary-light/10 dark:border-theme-primary-dark"
+                ? "bg-theme-primary hover:bg-theme-primary dark:bg-theme-primary-light/10 hover:dark:bg-theme-primary-light/10 border border-theme-primary-dark dark:border-theme-primary-dark"
                 : `${commonButtonProperties()}`
             }`}
           >

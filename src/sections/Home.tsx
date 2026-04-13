@@ -169,7 +169,7 @@ const Home: React.FC<HomeProps> = ({
                                     }}
                                     className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                 >
-                                    <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_2px_var(--color-zinc-600))]">
+                                    <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_1px_var(--color-zinc-900))]">
                                         {(themeMode === "light") ? <RiMoonClearFill/> : <RiSunFill/>}
                                     </span>
                                 </button>
@@ -220,7 +220,7 @@ const Home: React.FC<HomeProps> = ({
                                         }}
                                         className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                     >
-                                        <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_2px_var(--color-zinc-600))]">
+                                        <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_1px_var(--color-zinc-900))]">
                                             <RiPaletteFill/>
                                         </span>
                                     </button>

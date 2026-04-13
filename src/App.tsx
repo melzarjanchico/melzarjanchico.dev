@@ -148,7 +148,7 @@ function App() {
                   }}
                   variant="secondary"
                   className={`
-                    fixed bottom-7 right-7 sm:right-10 z-999 rounded-full shadow-lg p-3 transition-all duration-300 ease-in-out 
+                    fixed bottom-6 right-7 sm:bottom-6 sm:right-8 lg:bottom-9 lg:right-11 z-999 rounded-full shadow-lg p-3 transition-all duration-300 ease-in-out 
                     border border-theme-primary-dark text-theme-primary-dark dark:border-theme-main dark:text-theme-main
                     ${showScrollToTop 
                       ? 'opacity-100 translate-y-0 pointer-events-auto' 
