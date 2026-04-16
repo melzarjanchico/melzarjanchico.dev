@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './App.css'
 import ClickSpark from './components/ClickSpark'
 import BackgroundGrainient from './components/personal/BackgroundGrainient'
@@ -12,7 +12,10 @@ import { MY_EDUCATION, MY_EMPLOYMENT } from './data/experience';
 import { RiArrowUpLine, RiHome9Fill } from 'react-icons/ri';
 import type { ThemeItem } from './data/models';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { VALID_PATHS as paths } from './data/links';
 import Footer from './sections/Footer';
+import { Toaster } from './components/ui/sonner';
+import { toast } from 'sonner';
 
 function App() {
   // Hooks
@@ -20,10 +23,9 @@ function App() {
   const navigate = useNavigate();
 
   // App States
-  const [showContent, setShowContent] = useState(() => {
-    const isPageHome = location.pathname === '/' || localStorage.getItem("page") === '/';
-    return !isPageHome;
-  });
+  // Derived state to ensure layout syncs with URL immediately
+  const showContent = paths.includes(location.pathname) && location.pathname !== '/';
+
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   // Site Performance Hooks
@@ -31,25 +33,21 @@ function App() {
   const isSlow = usePerformanceCheck();
 
   // Light/Dark Mode States and Handlers
-  const handleModeSwitch = (themeMode: string) => {
+  const [themeMode, setThemeMode] = useState(() => {
+    return localStorage.getItem("mode") || "light"
+  })
+
+  useLayoutEffect(() => {
     const root = window.document.documentElement;
-    
     if (themeMode === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
-  }
-
-  const [themeMode, setThemeMode] = useState(() => {
-    const storedMode = localStorage.getItem("mode") || "light"
-    handleModeSwitch(storedMode);
-    return storedMode;
-  })
+  }, [themeMode]);
 
   const toggleMode = () => {
     const mode = (themeMode === "light") ? "dark" : "light";
-    handleModeSwitch(mode);
     setThemeMode(mode);
     localStorage.setItem("mode", mode);
   }
@@ -80,19 +78,38 @@ function App() {
 
   // Path Checks
   const [page, setPage] = useState(() => {
-    const storedPage = location.pathname || localStorage.getItem("page") || "/"
-    return storedPage;
+    // Initialize with current path if valid, otherwise fallback to storage
+    return (paths.includes(location.pathname) && location.pathname !== '/') 
+      ? location.pathname 
+      : localStorage.getItem("page") || '/about';
   });
 
-  const togglePage = (page: string) => {
-    localStorage.setItem("page", page);
-    navigate(page);
+  // Adjusting state during render (Official React Pattern)
+  // This avoids useEffect cascading renders AND useRef access-during-render errors.
+  if (paths.includes(location.pathname) && location.pathname !== '/' && page !== location.pathname) {
+    setPage(location.pathname);
+    localStorage.setItem("page", location.pathname);
+  }
 
-    if (page !== '/') {
-      setPage(page);
-    } else {
-      setShowContent(false);
+  // Effect handles ONLY the external system sync (Toasts)
+  useEffect(() => {
+    const isInvalid = !paths.includes(location.pathname);
+    
+    if (isInvalid) {
+      toast.error(`404: Invalid URL`, {
+        id: "invalid-path-error",
+        position: "top-right",
+        description: (
+          <span className="text-black dark:text-white text-xs leading-none">
+            <code className="text-red-500 font-bold">{location.pathname}</code> is not a valid subpage.
+          </span>
+        ),
+      });
     }
+  }, [location.pathname]);
+
+  const togglePage = (pagePath: string) => {
+    navigate(pagePath);
   }
 
   return (
@@ -138,7 +155,7 @@ function App() {
                 duration-0 lg:duration-700 
               `}
               isVisible={!showContent} 
-              setIsVisible={setShowContent} 
+              setIsVisible={() => navigate('/')} 
               themeColor={themeColor} 
               setThemeColor={toggleTheme}
               themeMode={themeMode}
@@ -182,7 +199,6 @@ function App() {
                 {/* Redirection Buttons */}
                 <Button 
                     onClick={() => {
-                      setShowContent(!showContent)
                       togglePage('/');
                     }} 
                     variant="outline"
@@ -215,6 +231,7 @@ function App() {
           </div>          
         </div>
       </ClickSpark>
+      <Toaster />
     </>
   )
 }

@@ -68,3 +68,12 @@ export const MY_LINKS = [
         main: true
     },
 ]
+
+export const VALID_PATHS = [
+    '/',
+    '/about',
+    '/history',
+    '/projects,',
+    '/skills',
+    '/stats',
+]
