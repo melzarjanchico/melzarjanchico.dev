@@ -96,7 +96,7 @@ export const MY_EMPLOYMENT = [
         ],
         skills: [
             'html', 'css', 'javascript', 'typescript', 'react-js', 'tailwind-css', 'vite', 'auth-jwt',
-            'node-js', 'express-js', 'typeorm', 'python', 'odoo', 'rest-api', 'sql', 'postgresql',
+            'node-js', 'express-js', 'typeorm', 'python', 'odoo', 'rest-api', 'sql', 'postgresql', 'figma',
             'git', 'github', 'agile-scrum', 'clickup', 'postman', 'open-api', 'vs-code', 'google-workspace',
         ],
     },

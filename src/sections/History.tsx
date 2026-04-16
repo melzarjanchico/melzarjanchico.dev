@@ -12,7 +12,7 @@ interface HistoryProps {
 }
 
 const History: React.FC<HistoryProps> = ({ history }) => {
-  const [filter, setFilter] = useState<"all" | "work" | "school">("work");
+  const [filter, setFilter] = useState<"all" | "work" | "school">("all");
 
   const sortedHistory = [...history]
     .filter((item) => {
