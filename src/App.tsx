@@ -21,7 +21,7 @@ function App() {
 
   // App States
   const [showContent, setShowContent] = useState(() => {
-    const isPageHome = location.pathname === '/' && localStorage.getItem("page") === '/';
+    const isPageHome = location.pathname === '/' || localStorage.getItem("page") === '/';
     return !isPageHome;
   });
   const [showScrollToTop, setShowScrollToTop] = useState(false);
