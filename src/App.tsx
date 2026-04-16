@@ -10,20 +10,25 @@ import { useIsLowEndDevice } from './hooks/useIsLowEndDevice';
 import { Button } from './components/ui/button';
 import { MY_EDUCATION, MY_EMPLOYMENT } from './data/experience';
 import { RiArrowUpLine, RiHome9Fill } from 'react-icons/ri';
-// import useIsMobile from './hooks/useIsMobile';
 import type { ThemeItem } from './data/models';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from './sections/Footer';
 
 function App() {
+  // Hooks
+  const location = useLocation();
+  const navigate = useNavigate();
+
   // App States
-  const [showContent, setShowContent] = useState(false);
+  const [showContent, setShowContent] = useState(() => {
+    const isPageHome = location.pathname === '/' && localStorage.getItem("page") === '/';
+    return !isPageHome;
+  });
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   // Site Performance Hooks
   const isLowEndDevice = useIsLowEndDevice();
   const isSlow = usePerformanceCheck();
-  // const isMobile = useIsMobile();
 
   // Light/Dark Mode States and Handlers
   const handleModeSwitch = (themeMode: string) => {
@@ -52,7 +57,6 @@ function App() {
   // Color Themes States and Handlers
   const [themeColor, setThemeColor] = useState<ThemeItem>(() => {
     const storedTheme = localStorage.getItem("theme") || "sweetener"
-
     return getTheme(storedTheme);
   }); 
 
@@ -74,8 +78,22 @@ function App() {
     }
   };
 
-  // Hooks
-  const navigate = useNavigate();
+  // Path Checks
+  const [page, setPage] = useState(() => {
+    const storedPage = location.pathname || localStorage.getItem("page") || "/"
+    return storedPage;
+  });
+
+  const togglePage = (page: string) => {
+    localStorage.setItem("page", page);
+    navigate(page);
+
+    if (page !== '/') {
+      setPage(page);
+    } else {
+      setShowContent(false);
+    }
+  }
 
   return (
     <>
@@ -125,6 +143,7 @@ function App() {
               setThemeColor={toggleTheme}
               themeMode={themeMode}
               toggleMode={toggleMode}
+              togglePage={togglePage}
             />
 
             {/* Content Section */}
@@ -164,7 +183,7 @@ function App() {
                 <Button 
                     onClick={() => {
                       setShowContent(!showContent)
-                      navigate('/');;
+                      togglePage('/');
                     }} 
                     variant="outline"
                     className={`mb-6 ${commonButtonProperties()}`}
@@ -176,10 +195,12 @@ function App() {
                 <div className='w-full flex justify-center'>
 
                   {/* History */}
-                  <History history={[
-                    ...MY_EMPLOYMENT.map(job => ({ ...job, itemType: "work" })),
-                    ...MY_EDUCATION.map(school => ({ ...school, itemType: "school" }))
-                  ]}/>
+                  {page === '/history' &&
+                    <History history={[
+                      ...MY_EMPLOYMENT.map(job => ({ ...job, itemType: "work" })),
+                      ...MY_EDUCATION.map(school => ({ ...school, itemType: "school" }))
+                    ]}/>
+                  }
 
                 </div>
 

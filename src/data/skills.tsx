@@ -56,12 +56,12 @@ export const MY_SKILLS = [
   { "id": "canva", "label": "Canva", "group": "tools" },
   { "id": "clickup", "label": "ClickUp", "group": "tools" },
   { "id": "notion", "label": "Notion", "group": "tools" },
-  { "id": "ms-power-bi", "label": "Power BI", "group": "tools" },
+  { "id": "ms-power-bi", "label": "MS Power BI", "group": "tools" },
   { "id": "ms-power-automate", "label": "Power Automate", "group": "tools" },
 
   // others
   { "id": "agile-scrum", "label": "Agile/Scrum", "group": "others" },
-  { "id": "ms-office", "label": "Microsoft Office", "group": "others" },
+  { "id": "ms-office", "label": "MS Office", "group": "others" },
   { "id": "google-workspace", "label": "Google Workspace", "group": "others" },
   { "id": "markdown", "label": "Markdown", "group": "others" },
   { "id": "latex", "label": "LaTeX", "group": "others" }

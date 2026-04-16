@@ -85,6 +85,10 @@ export const commonButtonProperties = () => {
   return 'hover:border-theme-main dark:hover:border-theme-main/50 hover:bg-theme-primary-light/50 dark:hover:bg-theme-primary-light/10 shrink-0 transition-colors duration-500';
 }
 
+export const commonFilterButtonProperties = () => {
+  return 'hover:border-theme-primary-dark/70 dark:hover:border-theme-main/70 hover:bg-theme-primary-light dark:hover:bg-theme-primary-light/10 shrink-0 transition-colors duration-500';
+}
+
 export const scrollbarProperties = () => {
   return '[&::-webkit-scrollbar]:w-1 sm:[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-theme-primary-dark [&::-webkit-scrollbar-track]:bg-theme-primary dark:[&::-webkit-scrollbar-track]:bg-zinc-900 transition-all duration-500';
 }

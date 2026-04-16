@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { RiBriefcaseLine, RiGraduationCapLine } from 'react-icons/ri'
 import { historyTypeList, historyTypes } from "@/data/maps";
 import { Card } from "@/components/ui/card";
-import { commonButtonProperties } from "@/data/themes";
+import { commonFilterButtonProperties } from "@/data/themes";
 import { Button } from "@/components/ui/button";
 import { skills } from "@/data/skills";
 
@@ -72,7 +72,7 @@ const History: React.FC<HistoryProps> = ({ history }) => {
             className={`px-2.5 rounded-md text-[11px] font-bold uppercase tracking-widest transition-all duration-500 cursor-pointer ${
               filter === type
                 ? "bg-theme-primary hover:bg-theme-primary dark:bg-theme-primary-light/10 hover:dark:bg-theme-primary-light/10 border border-theme-primary-dark dark:border-theme-primary-dark"
-                : `${commonButtonProperties()}`
+                : `${commonFilterButtonProperties()}`
             }`}
           >
             {historyTypeList[type]}

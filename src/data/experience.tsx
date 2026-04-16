@@ -95,7 +95,7 @@ export const MY_EMPLOYMENT = [
             <>Worked closely and cross-functionally with designers, engineers, and product leads in delivering high-quality, user-focused features within project timelines.</>,
         ],
         skills: [
-            'html', 'css', 'javascript', 'typescript', 'react-js', 'tailwind-css', 'vite', 
+            'html', 'css', 'javascript', 'typescript', 'react-js', 'tailwind-css', 'vite', 'auth-jwt',
             'node-js', 'express-js', 'typeorm', 'python', 'odoo', 'rest-api', 'sql', 'postgresql',
             'git', 'github', 'agile-scrum', 'clickup', 'postman', 'open-api', 'vs-code', 'google-workspace',
         ],

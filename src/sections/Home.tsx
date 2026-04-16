@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { commonButtonProperties, THEMES_LIST } from "@/data/themes";
 import { FaCircle } from "react-icons/fa6";
 import { RiSunFill, RiMoonClearFill, RiCheckboxBlankCircleFill, RiPaletteFill } from "react-icons/ri";
-import { useNavigate } from 'react-router-dom';
 import type { ThemeItem } from "@/data/models";
 
 type HomeProps = {
@@ -26,6 +25,7 @@ type HomeProps = {
     setThemeColor: (colorTheme: ThemeItem) => void;
     themeMode: string;
     toggleMode: () => void;
+    togglePage: (page: string) => void;
 };
 
 const Home: React.FC<HomeProps> = ({
@@ -36,6 +36,7 @@ const Home: React.FC<HomeProps> = ({
     setThemeColor,
     themeMode,
     toggleMode,
+    togglePage,
 }: HomeProps) => {
     // Captions
     const [caption, setCaption] = useState<React.ReactNode>("Melzar Jan Chico"); 
@@ -51,8 +52,6 @@ const Home: React.FC<HomeProps> = ({
     // Shared Styles for Home card items
     const badgeDefaultStyle = "bg-black/60 font-light cursor-pointer";
     const headerClickablesStyle = "bg-theme-primary-light shadow-md hover:bg-theme-primary border border-theme-main transition-all duration-500 cursor-pointer";
-
-    const navigate = useNavigate();
 
     const nowPlayingCaption = () => {
         return (
@@ -286,9 +285,9 @@ const Home: React.FC<HomeProps> = ({
                         onClick={() => {
                             setIsVisible(isVisible);
                             if (isVisible) {
-                                navigate('/history');
+                                togglePage('/history');
                             } else {
-                                navigate('/');
+                                togglePage('/');
                             }
                         }} 
                         variant="outline"
