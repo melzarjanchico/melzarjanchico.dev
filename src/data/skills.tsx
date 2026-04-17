@@ -57,7 +57,7 @@ export const MY_SKILLS = [
   { "id": "clickup", "label": "ClickUp", "group": "tools" },
   { "id": "notion", "label": "Notion", "group": "tools" },
   { "id": "ms-power-bi", "label": "MS Power BI", "group": "tools" },
-  { "id": "ms-power-automate", "label": "Power Automate", "group": "tools" },
+  { "id": "ms-power-automate", "label": "MS Power Automate", "group": "tools" },
 
   // others
   { "id": "agile-scrum", "label": "Agile/Scrum", "group": "others" },
