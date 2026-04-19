@@ -38,4 +38,4 @@ const ModeToggler = ({
   );
 };
 
-export default ModeToggler; 
+export default ModeToggler;
