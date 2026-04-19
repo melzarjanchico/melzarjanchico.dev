@@ -116,7 +116,7 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="relative group w-full h-full min-h-0 transition-all duration-300 ease-out sm:transform-3d"
+        className="relative group w-full h-full min-h-0 transition-all duration-500 ease-out sm:transform-3d"
         style={{
           width: imageWidth,
           height: imageHeight,
@@ -130,7 +130,7 @@ export default function TiltedCard({
         <img
           src={imageSrc}
           alt={altText}
-          className="block w-full h-full object-cover rounded-t-lg shadow-sm will-change-transform duration-300 no-img-select sm:group-hover:rounded-lg sm:transform-[translateZ(0)]"
+          className="block w-full h-full object-cover rounded-t-lg shadow-sm will-change-transform duration-500 no-img-select sm:group-hover:rounded-lg sm:transform-[translateZ(0)]"
           style={{ maxHeight: "350px" }}
         />
 

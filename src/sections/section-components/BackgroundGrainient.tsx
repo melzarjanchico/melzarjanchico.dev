@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Grainient from "../Grainient";
+import Grainient from "../../components/Grainient";
 import type { ThemeItem } from "@/data/models";
 
 interface BackgroundGrainientProps {

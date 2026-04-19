@@ -13,6 +13,12 @@ export type ThemeItem = {
     secondaryDark?: string;
 };
 
+export type SectionItem = {
+    link: string;
+    icon: React.ReactNode,
+    name: string;
+}
+
 // Component Models
 export interface HistoryItem {
     id: string;
@@ -34,5 +40,20 @@ export interface EmploymentHistoryItem extends HistoryItem {
 
 export interface EducationHistoryItem extends HistoryItem {
     degree: string;
-    major: string;
+    major?: string;
+}
+
+// Project Item
+export interface ProjectItem {
+    id: string;
+    name: string;
+    description: React.ReactNode;
+    date: Date;
+    skills: string[];
+    image?: string;
+    links: {
+        icon: React.ReactNode,
+        link: string,
+    }[];
+    status: string;
 }

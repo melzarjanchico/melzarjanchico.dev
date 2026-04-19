@@ -42,9 +42,9 @@ export const THEMES_LIST: ThemeItem[] = [
   },
   {
     name: "wildflower",
-    bgColor1: "#CBD5E1",
-    bgColor2: "#94A3B8",
-    bgColor3: "#64748B",
+    bgColor1: "#E2E8F0",
+    bgColor2: "#B2C1D3",
+    bgColor3: "#8BA1B4",
     mainColor: "#93c5fd", // blue-300
     primary: "#bfdbfe", // blue-200
     primaryLight: "#dbeafe", // blue-100
@@ -55,9 +55,9 @@ export const THEMES_LIST: ThemeItem[] = [
   },
   {
     name: "stateside",
-    bgColor1: "#F4DADA",
-    bgColor2: "#C58E8E",
-    bgColor3: "#956363",
+    bgColor1: "#F9EAEA",
+    bgColor2: "#D9AFAF",
+    bgColor3: "#B08282",
     mainColor: "#fca5a5", // red-300
     primary: "#fecaca",// red-200
     primaryLight: "#fee2e2", // red-100

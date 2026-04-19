@@ -5,8 +5,9 @@ import work_talino from '../assets/history/work-talino.jpg';
 import school_up from '../assets/history/school-up.jpg';
 import school_stec from '../assets/history/school-stec.jpg'
 import school_sdlc from '../assets/history/school-sdlc.jpg'
+import type { EducationHistoryItem, EmploymentHistoryItem } from './models';
 
-export const MY_EMPLOYMENT = [
+export const MY_EMPLOYMENT: EmploymentHistoryItem[] = [
     {
         id: "exp_001",
         name: "Kuehne+Nagel",
@@ -102,7 +103,7 @@ export const MY_EMPLOYMENT = [
     },
 ];
 
-export const MY_EDUCATION = [
+export const MY_EDUCATION: EducationHistoryItem[] = [
     {
         id: "edu_001",
         name: "Saint Dominic Savio Internation School",
@@ -153,7 +154,7 @@ export const MY_EDUCATION = [
             <>CHED TES-TDP Scholar. UP Computer Science Guild Member. UP Cebu Google Developer Students Club Builder</>,
         ],
         skills: [
-            'c', 'c-plus-plus', 'python', 'markdown', 'latex', 'notion', 'canva', 'agile-scrum', 'ms-office', 'google-workspace', 'vs-code'
+            'c', 'c-plus-plus', 'python', 'markdown', 'latex', 'notion', 'canva', 'agile-scrum', 'ms-office', 'google-workspace', 'vs-code', "r",
         ]
     },
 ]

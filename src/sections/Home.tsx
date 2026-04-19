@@ -9,13 +9,14 @@ import ReactCountryFlag from "react-country-flag";
 import { useEffect, useState } from "react";
 import { SpotifyMainPublicService } from "@/api/spotify/spotify-main-public";
 import type { CurrentTrackSuccessResponse, SpotityMainPublicServiceResponse } from "@/api/spotify/spotify-models";
-import MarqueeText from "@/components/personal/Marquee";
-import AudioWave from "@/components/personal/AudioWave";
+import MarqueeText from "@/sections/section-components/Marquee";
+import AudioWave from "@/sections/section-components/AudioWave";
 import { Button } from "@/components/ui/button";
-import { commonButtonProperties, THEMES_LIST } from "@/data/themes";
+import { commonButtonProperties } from "@/data/themes";
 import { FaCircle } from "react-icons/fa6";
-import { RiSunFill, RiMoonClearFill, RiCheckboxBlankCircleFill, RiPaletteFill } from "react-icons/ri";
 import type { ThemeItem } from "@/data/models";
+import ModeToggler from "./section-components/ModeToggler";
+import ThemeToggler from "./section-components/ThemeToggler";
 
 type HomeProps = {
     className: string;
@@ -45,9 +46,6 @@ const Home: React.FC<HomeProps> = ({
     // Current Track
     const [showPlaying, setShowPlaying] = useState(false);
     const [currentTrack, setCurrentTrack] = useState<CurrentTrackSuccessResponse | null>(null);
-
-    // Theme Picker Open is Open
-    const [isThemePickerOpen, setIsThemePickerOpen] = useState(false);
 
     // Shared Styles for Home card items
     const badgeDefaultStyle = "bg-black/60 font-light cursor-pointer";
@@ -155,29 +153,25 @@ const Home: React.FC<HomeProps> = ({
                     }
                     themeContent={
                         <div className="flex justify-end gap-1 m-6">
-                            {/* Theme Mode Toggler */}
-                            <div
-                                className="flex items-end justify-center"
-                                onMouseEnter={() => handleOnMouseEnter(`${(themeMode === "light") ? "Dark" : "Light"} Mode`)} 
-                                onMouseLeave={() => handleOnMouseLeave()}
-                            >
-                                <button 
-                                    onClick={() => {
-                                        toggleMode();
-                                        setCaption((themeMode === "light") ? "Light Mode" : "Dark Mode");
-                                    }}
-                                    className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
-                                >
-                                    <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_1px_var(--color-zinc-900))]">
-                                        {(themeMode === "light") ? <RiMoonClearFill/> : <RiSunFill/>}
-                                    </span>
-                                </button>
-                            </div>
+                            {/* Light/Dark Mode Toggler */}
+                            <ModeToggler 
+                                themeMode={themeMode}
+                                toggleMode={toggleMode}
+                                setCaption={setCaption}
+                                handleOnMouseEnter={handleOnMouseEnter}
+                                handleOnMouseLeave={handleOnMouseLeave}
+                            />
 
-                            <div className="flex flex-col">
-                                {/* Theme Color Picker */}
+                            <ThemeToggler
+                                themeColor={themeColor}
+                                setThemeColor={setThemeColor}
+                                handleOnMouseEnter={handleOnMouseEnter}
+                                handleOnMouseLeave={handleOnMouseLeave}
+                            />
+
+                            {/* <div className="flex flex-col">
                                 <div className="relative flex flex-col items-center mb-3">
-                                    {THEMES_LIST
+                                    {themes
                                         .filter((color) => color.name !== themeColor.name)
                                         .map((color, index) => (
                                             <button
@@ -192,12 +186,12 @@ const Home: React.FC<HomeProps> = ({
                                                 className="relative w-5 flex items-center justify-center"
                                             >
                                                 <span 
-                                                    className={`absolute rounded-full transition-all duration-300 ease-out cursor-pointer text-xl ${isThemePickerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                                                    className={`absolute rounded-full transition-all duration-500 ease-out cursor-pointer text-xl ${isThemePickerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                                                     style={{ 
                                                         color: color.mainColor,
                                                         transform: isThemePickerOpen ? `translateY(-${(index) * 20}px)` : `translateY(0px)`,
-                                                        zIndex: THEMES_LIST.length - index,
-                                                        transitionDelay: isThemePickerOpen ? `${index * 30}ms` : `${(THEMES_LIST.length - index) * 30}ms`,
+                                                        zIndex: themes.length - index,
+                                                        transitionDelay: isThemePickerOpen ? `${index * 30}ms` : `${(themes.length - index) * 30}ms`,
                                                     }}
                                                 >
                                                     <RiCheckboxBlankCircleFill/>
@@ -206,8 +200,6 @@ const Home: React.FC<HomeProps> = ({
                                         ))
                                     }
                                 </div>
-
-                                {/* Theme Color Button */}
                                 <div 
                                     className="relative flex items-center justify-center"
                                     onMouseEnter={() => handleOnMouseEnter("Change Themes")} 
@@ -217,14 +209,14 @@ const Home: React.FC<HomeProps> = ({
                                         onClick={() => {
                                             setIsThemePickerOpen(!isThemePickerOpen)
                                         }}
-                                        className="rounded-full transition-all duration-300 ease-out cursor-pointer hover:scale-110 active:scale-90"
+                                        className="rounded-full transition-all duration-500 ease-out cursor-pointer hover:scale-110 active:scale-90"
                                     >
                                         <span className="block transition-colors duration-500 text-xl text-theme-main filter-[drop-shadow(0_0_1px_var(--color-zinc-900))]">
                                             <RiPaletteFill/>
                                         </span>
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     }  
                 />
@@ -285,7 +277,8 @@ const Home: React.FC<HomeProps> = ({
                         onClick={() => {
                             setIsVisible(isVisible);
                             if (isVisible) {
-                                togglePage('/history');
+                                const storedPath = localStorage.getItem("page") || '/about';
+                                togglePage(storedPath);
                             } else {
                                 togglePage('/');
                             }

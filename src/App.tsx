@@ -1,21 +1,24 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './App.css'
 import ClickSpark from './components/ClickSpark'
-import BackgroundGrainient from './components/personal/BackgroundGrainient'
+import BackgroundGrainient from './sections/section-components/BackgroundGrainient'
 import Home from './sections/Home'
 import History from './sections/History'
-import { commonBgProperties, commonButtonProperties, getTheme, scrollbarProperties } from './data/themes';
+import { commonBgProperties, getTheme, scrollbarProperties } from './data/themes';
 import { usePerformanceCheck } from './hooks/usePeformanceCheck';
 import { useIsLowEndDevice } from './hooks/useIsLowEndDevice';
-import { Button } from './components/ui/button';
-import { MY_EDUCATION, MY_EMPLOYMENT } from './data/experience';
-import { RiArrowUpLine, RiHome9Fill } from 'react-icons/ri';
+import { MY_EDUCATION as educationList, MY_EMPLOYMENT as employmentList } from './data/experience';
+import { MY_PROJECTS as projectList } from './data/projects';
 import type { ThemeItem } from './data/models';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { VALID_PATHS as paths } from './data/links';
+import { VALID_PATHS as paths, SECTIONS as sections } from './data/links';
 import Footer from './sections/Footer';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
+import Projects from './sections/Projects';
+import Navbar from './sections/Navbar';
+import ScrollToTopButton from './sections/section-components/ScrollToTopButton';
+import UnderConstruction from './sections/section-components/UnderConstruction';
 
 function App() {
   // Hooks
@@ -37,15 +40,6 @@ function App() {
     return localStorage.getItem("mode") || "light"
   })
 
-  useLayoutEffect(() => {
-    const root = window.document.documentElement;
-    if (themeMode === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [themeMode]);
-
   const toggleMode = () => {
     const mode = (themeMode === "light") ? "dark" : "light";
     setThemeMode(mode);
@@ -62,6 +56,22 @@ function App() {
     setThemeColor(color);
     localStorage.setItem("theme", color.name);
   }
+
+  // Use LayoutEffect to handle color themes and modes
+  useLayoutEffect(() => {
+    const root = window.document.documentElement;
+    if (themeMode === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+
+    root.style.setProperty('--color-theme-main', themeColor.mainColor);
+    root.style.setProperty('--color-theme-primary', themeColor.primary);
+    root.style.setProperty('--color-theme-primary-light', themeColor.primaryLight);
+    root.style.setProperty('--color-theme-primary-dark', themeColor.primaryDark);
+    root.style.setProperty('--color-theme-bg', themeColor.bgColor1);
+  }, [themeMode, themeColor]);
 
   // Scroll-related Code
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -123,13 +133,6 @@ function App() {
       >
         <div
           className="relative h-dvh overflow-hidden bg-theme-bg dark:bg-zinc-900"
-          style={{
-            '--color-theme-main': themeColor.mainColor,
-            '--color-theme-primary': themeColor.primary,
-            '--color-theme-primary-light': themeColor.primaryLight,
-            '--color-theme-primary-dark': themeColor.primaryDark,
-            '--color-theme-bg': themeColor.bgColor1,
-          } as React.CSSProperties}
         >
           {/* Conditional rendering of gradient background if device is lowend, slowing down, or mobile*/}
           {isLowEndDevice || isSlow ? (
@@ -175,37 +178,10 @@ function App() {
               }
               duration-0 lg:duration-700
             `}>
-              <div ref={scrollRef} onScroll={handleScroll} className={`w-full h-full overflow-y-auto overflow-x-hidden p-6 lg:p-10 ${scrollbarProperties()}`}>
+              <div ref={scrollRef} onScroll={handleScroll} className={`w-full overflow-y-auto p-6 lg:p-10 ${scrollbarProperties()}`}>
 
-                {/* Persistent Scroll-to-Top Button */}
-                <Button 
-                  onClick={() => {
-                    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' }); 
-                  }}
-                  variant="secondary"
-                  className={`
-                    fixed bottom-6 right-7 sm:bottom-6 sm:right-8 lg:bottom-9 lg:right-11 z-999 rounded-full shadow-lg p-3 transition-all duration-300 ease-in-out 
-                    border border-theme-primary-dark text-theme-primary-dark dark:border-theme-main dark:text-theme-main
-                    ${showScrollToTop 
-                      ? 'opacity-100 translate-y-0 pointer-events-auto' 
-                      : 'opacity-0 translate-y-4 pointer-events-none'
-                    }
-                    hover:scale-110 active:scale-95
-                  `}
-                >
-                  <span><RiArrowUpLine/></span>
-                </Button>
-
-                {/* Redirection Buttons */}
-                <Button 
-                    onClick={() => {
-                      togglePage('/');
-                    }} 
-                    variant="outline"
-                    className={`mb-6 ${commonButtonProperties()}`}
-                >
-                    <span><RiHome9Fill/></span>
-                </Button>
+                {/* Navbar */}
+                <Navbar sections={sections} togglePage={togglePage} themeMode={themeMode} toggleMode={toggleMode} themeColor={themeColor} setThemeColor={toggleTheme}/>
 
                 {/* Pages */}
                 <div className='w-full flex justify-center'>
@@ -213,20 +189,30 @@ function App() {
                   {/* History */}
                   {page === '/history' &&
                     <History history={[
-                      ...MY_EMPLOYMENT.map(job => ({ ...job, itemType: "work" })),
-                      ...MY_EDUCATION.map(school => ({ ...school, itemType: "school" }))
+                      ...employmentList.map(job => ({ ...job, itemType: "work" })),
+                      ...educationList.map(school => ({ ...school, itemType: "school" }))
                     ]}/>
+                  }
+
+                  {/* Project */}
+                  {page === '/projects' &&
+                    <Projects projects={projectList}/>
+                  }
+
+                  {['/about', '/skills', '/stats'].includes(page) &&
+                    <UnderConstruction pageName={page}/>
                   }
 
                 </div>
 
-                {/* Footer */}
-                <div>
-                  <Footer/>
-                </div>
+                {/* Persistent Scroll-to-Top Button */}
+                <ScrollToTopButton scrollRef={scrollRef} isVisible={showScrollToTop}/>
 
+                {/* Footer */}
+                <Footer/>
+                
               </div>
-            </div>
+            </div> 
 
           </div>          
         </div>

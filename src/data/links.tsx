@@ -1,14 +1,14 @@
 
-import { RiLinkedinBoxFill, RiGithubFill, RiFacebookCircleFill, RiMailFill, RiFileTextFill, RiYoutubeFill, RiInstagramFill, RiSpotifyFill } from "react-icons/ri";
-import { FaHackerrank } from "react-icons/fa";
+import { RiLinkedinBoxFill, RiGithubFill, RiFacebookCircleFill, RiMailFill, RiFileTextFill, RiYoutubeFill, RiInstagramFill, RiSpotifyFill, RiHome9Fill, RiUser3Fill, RiToolsFill, RiBarChart2Fill, RiCalendarFill, RiCodeSSlashFill } from "react-icons/ri";
+import { FaHackerrank, FaKaggle } from "react-icons/fa";
 import Resume from '../assets/docs/Resume (Melzar Jan Chico, 2026).pdf'
+import type { SectionItem } from "./models";
 
 // Titles from the header
 export const MY_TITLES = [
     '🚀 Software Engineer',
     '🛠️ Full Stack Developer',
     '🔎 Data Analyst',
-    '🤖 AI/ML Engineer'
 ];
 
 // Links for redirection
@@ -28,7 +28,13 @@ export const MY_LINKS = [
     {
         name: "Hackerrank",
         link: "https://www.hackerrank.com/profile/melzarjanchico",
-        icon: <FaHackerrank/>,
+        icon: <FaHackerrank size={15}/>,
+        main: false,
+    },
+    {
+        name: "Kaggle",
+        link: "https://www.kaggle.com/melzarjanchico",
+        icon: <FaKaggle size={14}/>,
         main: false,
     },
     {
@@ -73,7 +79,40 @@ export const VALID_PATHS = [
     '/',
     '/about',
     '/history',
-    '/projects,',
+    '/projects',
     '/skills',
     '/stats',
+]
+
+export const SECTIONS: SectionItem[] = [
+    {
+        link: '/',
+        icon: <RiHome9Fill/>,
+        name: "Home",
+    },
+    {
+        link: '/about',
+        icon: <RiUser3Fill />,
+        name: "About",
+    },
+    {
+        link: '/history',
+        icon: <RiCalendarFill />,
+        name: "History",
+    },
+    {
+        link: '/projects',
+        icon: <RiCodeSSlashFill />,
+        name: "Projects",
+    },
+    {
+        link: '/skills',
+        icon: <RiToolsFill />,
+        name: "Skills",
+    },
+    {
+        link: '/stats',
+        icon: <RiBarChart2Fill />,
+        name: "Stats",
+    },
 ]
